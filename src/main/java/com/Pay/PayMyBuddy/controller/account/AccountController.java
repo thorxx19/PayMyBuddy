@@ -17,26 +17,11 @@ import org.springframework.web.bind.annotation.*;
 public class AccountController {
 
     @Autowired
-    ClientRepository clientRepository;
-    @Autowired
     AccountService accountService;
 
-
     @PostMapping("/add")
-    @Transactional
     public @ResponseBody String addProfil(@RequestParam String name, String lastName, String mail, String password){
-
-        Profil profil = new Profil();
-
-        profil.setName(name);
-        profil.setLastName(lastName);
-        profil.setMail(mail);
-        profil.setPassword(password);
-        profil.setAccountId(accountService.addNewAccount());
-
-        clientRepository.save(profil);
-
-        return "Save";
+        return accountService.addProfil(name,lastName,mail,password);
     }
 
 

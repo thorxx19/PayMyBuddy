@@ -30,7 +30,6 @@ public class TransfertService {
         transfer.setAmount(postTransfert.getBalance());
 
         Transfer response = transferRepository.save(transfer);
-        log.info(response.getIdDebtor().toString());
 
         return "save";
     }

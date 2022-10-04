@@ -2,10 +2,9 @@ package com.Pay.PayMyBuddy.controller.connect;
 
 import com.Pay.PayMyBuddy.model.Connect;
 import com.Pay.PayMyBuddy.repository.ConnectRepository;
-import com.Pay.PayMyBuddy.service.ProfilService;
+import com.Pay.PayMyBuddy.service.ConnectService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,7 +17,7 @@ public class ConnectController {
     @Autowired
     ConnectRepository connectRepository;
     @Autowired
-    ProfilService profilService;
+    ConnectService connectService;
 
 
     @GetMapping("/connect")
@@ -27,15 +26,8 @@ public class ConnectController {
     }
     @PostMapping("/connect")
     public String postConnect(@RequestParam long idUn, long idDeux){
-        Connect connect = new Connect();
-
-        connect.setIdUn(profilService.getProfil(idUn));
-        connect.setIdDeux(profilService.getProfil(idDeux));
-
-        connectRepository.save(connect);
-        return "save";
+        return connectService.postConnect(idUn,idDeux);
     }
-
     @GetMapping("/connectId")
     public Iterable<Connect> getConnectById(@RequestParam long idUn) {
         return connectRepository.findByIdAll(idUn);
