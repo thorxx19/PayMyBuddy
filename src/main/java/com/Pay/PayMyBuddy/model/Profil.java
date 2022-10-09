@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.*;
 
 @Entity
@@ -18,10 +19,14 @@ public class Profil {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "client_id")
     private Long id;
+    @NotNull
     private String name;
     @Column(name = "last_name")
+    @NotNull
     private String lastName;
+    @NotNull
     private String mail;
+    @NotNull
     private String password;
     @OneToOne(
             cascade = CascadeType.ALL

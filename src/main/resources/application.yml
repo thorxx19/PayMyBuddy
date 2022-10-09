@@ -1,0 +1,79 @@
+server.port: 9001
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: "jdbc:mysql://localhost:3306/pay"
+    username: "root"
+    password: "rootroot"
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
+
+logging:
+  path: logs
+  file:
+    max-size: 1MB
+    name: ${logging.path}/PayMyBuddy.log
+  level:
+    root: ERROR
+    org:
+      springframework:
+        web: ERROR
+    com:
+      Pay:
+        PayMyBuddy:
+          repository: ERROR
+          filter: INFO
+          service: INFO
+          controller: INFO
+          PayMyBuddyApplication: ERROR
+  pattern:
+    console: "%red(%d{dd/MM/yyyy}) %highlight(%-5level) [%blue(%t)] %yellow(%C{1.}): %msg%n%throwable"
+    file: "%n%d{dd/MM/yyyy HH:MM:ss} %p %C{1.}%n %m%n"
+spring.main.banner-mode: off
+
+---
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: "jdbc:mysql://localhost:3306/payTest"
+    username: "root"
+    password: "rootroot"
+spring.config.activate.on-profile: test
+logging:
+  path: logs
+  file:
+    max-size: 1MB
+    name: ${logging.path}/PayMyBuddyTest.log
+  level:
+    root: ERROR
+    org:
+      springframework:
+        web: ERROR
+      boot:
+        StartupInfoLogger: ERROR
+    com:
+      Pay:
+        PayMyBuddy:
+          service: DEBUG
+          filter: INFO
+---
+
+management.endpoints.web.exposure.include: "*"
+
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  main:
+    banner-mode: off
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

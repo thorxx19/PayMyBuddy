@@ -4,6 +4,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Objects;
@@ -29,12 +30,14 @@ public class Transfer {
             cascade = CascadeType.ALL
     )
     @JoinColumn(name = "id_debtor")
+    @NotNull
     private Profil idDebtor;
 
     @ManyToOne(
             cascade = CascadeType.ALL
     )
     @JoinColumn(name = "id_credit")
+    @NotNull
     private Profil idCredit;
 
     private Date date;

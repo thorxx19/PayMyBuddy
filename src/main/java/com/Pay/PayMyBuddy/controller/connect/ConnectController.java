@@ -5,6 +5,7 @@ import com.Pay.PayMyBuddy.repository.ConnectRepository;
 import com.Pay.PayMyBuddy.service.ConnectService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public class ConnectController {
     @Autowired
     ConnectService connectService;
 
-
+    @Transactional(readOnly = true)
     @GetMapping("/connect")
     public List<Connect> getConnect(){
         return connectRepository.findAll();
@@ -28,6 +29,7 @@ public class ConnectController {
     public String postConnect(@RequestParam long idUn, long idDeux){
         return connectService.postConnect(idUn,idDeux);
     }
+    @Transactional(readOnly = true)
     @GetMapping("/connectId")
     public Iterable<Connect> getConnectById(@RequestParam long idUn) {
         return connectRepository.findByIdAll(idUn);

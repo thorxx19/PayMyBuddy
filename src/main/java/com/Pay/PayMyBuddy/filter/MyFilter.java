@@ -34,18 +34,21 @@ public class MyFilter implements Filter {
         responseCacheWrapperObject.copyBodyToResponse();
 
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+        HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         if (!httpServletRequest.getServletPath().contains("swagger")
                 && !httpServletRequest.getServletPath().contains("api-docs")
                 && !httpServletRequest.getServletPath().contains("actuator")
                 && !httpServletRequest.getServletPath().isBlank()
                 && !httpServletRequest.getServletPath().contains("favicon")
-                && httpServletRequest.getQueryString() != null) {
+                && httpServletRequest.getQueryString() != null
+                )
+                {
             log.info("Protocol :{} Method :{} Server :{} Port:{} End point:{}", request.getProtocol(), httpServletRequest.getMethod()
                     , request.getServerName(), request.getLocalPort(), httpServletRequest.getServletPath());
             log.info("Parametre :{}", URLDecoder.decode(httpServletRequest.getQueryString(), StandardCharsets.UTF_8));
             filterChain.doFilter(request, response);
 
-            HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+
             log.info("code Response :{}", httpServletResponse.getStatus());
             log.info("Response Json :{}", responseStr);
         }

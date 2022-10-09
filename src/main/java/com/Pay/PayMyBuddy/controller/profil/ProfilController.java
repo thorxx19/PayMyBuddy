@@ -2,13 +2,13 @@ package com.Pay.PayMyBuddy.controller.profil;
 
 
 import com.Pay.PayMyBuddy.model.Profil;
-import com.Pay.PayMyBuddy.repository.ClientRepository;
+import com.Pay.PayMyBuddy.repository.AccountRepository;
+import com.Pay.PayMyBuddy.repository.ProfilRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,23 +19,25 @@ import java.util.Optional;
 public class ProfilController {
 
     @Autowired
-    ClientRepository clientRepository;
+    ProfilRepository profilRepository;
+    @Autowired
+    AccountRepository accountRepository;
 
-
+    @Transactional(readOnly = true)
     @GetMapping("/clientId")
     public Optional<Profil> getClientById(@RequestParam Long id){
-        return clientRepository.findById(id);
+        return profilRepository.findById(id);
     }
-
+    @Transactional(readOnly = true)
     @GetMapping("/clients")
     public List<Profil> getClient(){
-        return clientRepository.findAll();
+        return profilRepository.findAll();
     }
 
     @GetMapping("client2")
     public void getclient2(@RequestParam String name, String password){
 
-        List<Profil> profil = clientRepository.findNotAll(name);
+        List<Profil> profil = profilRepository.findNotAll(name);
         profil.stream().forEach(x -> {if (x.getPassword().equals(password)){
             log.info("Connect");
         } else {
@@ -43,5 +45,17 @@ public class ProfilController {
         }
         });
     }
+    @Transactional(rollbackFor = Exception.class)
+    @DeleteMapping("/clients")
+    public String deleteClient(@RequestParam long id) throws ServiceException {
+
+        if (profilRepository.existsById(id)) {
+            profilRepository.deleteById(id);
+            return "Profil delete";
+        } else {
+            return "Profil inconnue";
+        }
+    }
+
 
 }

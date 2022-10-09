@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 @Getter
@@ -24,12 +25,14 @@ public class Connect {
             cascade = CascadeType.ALL
     )
     @JoinColumn(name = "id_client_un")
+    @NotNull
     private Profil idUn;
 
     @ManyToOne(
             cascade = CascadeType.ALL
     )
     @JoinColumn(name = "id_client_deux")
+    @NotNull
     private Profil idDeux;
 
     @Override

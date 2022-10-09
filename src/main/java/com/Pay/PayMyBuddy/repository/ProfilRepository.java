@@ -10,10 +10,12 @@ import java.util.List;
 
 
 @Repository
-public interface ClientRepository extends JpaRepository<Profil, Long> {
+public interface ProfilRepository extends JpaRepository<Profil, Long> {
 
     @Query("SELECT x FROM Profil x WHERE x.name = ?1")
     List<Profil> findNotAll(String name);
     @Query("SELECT x FROM Profil x WHERE x.id = ?1")
-    Profil findByIdTest(long id);
+    Profil findByProfilId(long id);
+    boolean existsByMail(String mail);
+
 }
