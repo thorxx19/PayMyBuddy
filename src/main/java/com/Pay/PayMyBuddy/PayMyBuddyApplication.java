@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
 @EnableJpaAuditing
-@EnableJpaRepositories(enableDefaultTransactions = false)
+@EnableJpaRepositories
 public class PayMyBuddyApplication {
 
 	public static void main(String[] args) {

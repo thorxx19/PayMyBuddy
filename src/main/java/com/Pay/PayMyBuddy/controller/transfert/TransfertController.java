@@ -7,13 +7,16 @@ import com.Pay.PayMyBuddy.repository.TransferRepository;
 import com.Pay.PayMyBuddy.service.TransfertService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
 
 
 @RestController
 @Slf4j
 @CrossOrigin("http://localhost:3000/")
-@RequestMapping("/transfert")
 public class TransfertController {
 
     @Autowired
@@ -22,14 +25,19 @@ public class TransfertController {
     TransfertService transfertService;
 
 
-    @PostMapping
+    @PostMapping("/transfert")
     public @ResponseBody boolean postTransfer(@RequestBody PostTransfert postTransfert){
         return transfertService.transfert(postTransfert);
     }
 
-    @GetMapping
-    public Iterable<Transfer> getTransferById(@RequestParam long id){
-        return transferRepository.findByIdAll(id);
+    @GetMapping("/transfert")
+    public List<Transfer> getTransferById(@RequestParam long id){
+        return transferRepository.findByIdDebtor_IdOrderByDateDesc(id);
+    }
+
+    @GetMapping("/trans")
+    public Optional<Transfer> getTest(@RequestParam Long id){
+        return transferRepository.findFirstByIdDebtor_IdOrderByDateDesc(id);
     }
 
 

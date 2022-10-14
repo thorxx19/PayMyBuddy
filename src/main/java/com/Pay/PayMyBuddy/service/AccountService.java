@@ -17,8 +17,6 @@ public class AccountService {
 
     @Autowired
     ProfilRepository profilRepository;
-    @Autowired
-    AccountRepository accountRepository;
 
     @Transactional(rollbackFor = Exception.class)
     public String addProfil(Profil profilAdd) throws ServiceException {

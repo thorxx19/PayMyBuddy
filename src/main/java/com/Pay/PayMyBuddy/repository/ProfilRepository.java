@@ -11,9 +11,7 @@ import java.util.List;
 
 @Repository
 public interface ProfilRepository extends JpaRepository<Profil, Long> {
-
-    @Query("SELECT x FROM Profil x WHERE x.name = ?1")
-    List<Profil> findNotAll(String name);
+    List<Profil> findByMail(String name);
     @Query("SELECT x FROM Profil x WHERE x.id = ?1")
     Profil findByProfilId(long id);
     boolean existsByMail(String mail);

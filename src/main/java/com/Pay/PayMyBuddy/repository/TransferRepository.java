@@ -6,13 +6,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-
+import java.util.List;
+import java.util.Optional;
 
 
 @Repository
 public interface TransferRepository extends JpaRepository<Transfer, Long> {
 
-    @Query("FROM Transfer WHERE idDebtor.id = ?1 order by date.date desc")
-    Iterable<Transfer> findByIdAll(Long idDebtor);
+    Optional<Transfer> findFirstByIdDebtor_IdOrderByDateDesc(Long id);
+
+    List<Transfer> findByIdDebtor_IdOrderByDateDesc(Long id);
 
 }

@@ -32,7 +32,7 @@ public class ConnectController {
     @Transactional(readOnly = true)
     @GetMapping("/connectId")
     public Iterable<Connect> getConnectById(@RequestParam long idUn) {
-        return connectRepository.findByIdAll(idUn);
+        return connectRepository.findByIdUn_Id(idUn);
     }
 
 }

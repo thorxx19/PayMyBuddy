@@ -2,6 +2,7 @@ package com.Pay.PayMyBuddy.controller.account;
 
 
 import com.Pay.PayMyBuddy.model.Profil;
+import com.Pay.PayMyBuddy.model.Transfer;
 import com.Pay.PayMyBuddy.service.AccountService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

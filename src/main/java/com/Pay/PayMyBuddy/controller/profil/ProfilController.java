@@ -34,10 +34,10 @@ public class ProfilController {
         return profilRepository.findAll();
     }
 
-    @GetMapping("client2")
-    public void getclient2(@RequestParam String name, String password){
+    @GetMapping("/client2")
+    public void getclient2(@RequestParam String mail, String password){
 
-        List<Profil> profil = profilRepository.findNotAll(name);
+        List<Profil> profil = profilRepository.findByMail(mail);
         profil.stream().forEach(x -> {if (x.getPassword().equals(password)){
             log.info("Connect");
         } else {
@@ -45,16 +45,12 @@ public class ProfilController {
         }
         });
     }
-    @Transactional(rollbackFor = Exception.class)
     @DeleteMapping("/clients")
     public String deleteClient(@RequestParam long id) throws ServiceException {
 
-        if (profilRepository.existsById(id)) {
             profilRepository.deleteById(id);
             return "Profil delete";
-        } else {
-            return "Profil inconnue";
-        }
+
     }
 
 

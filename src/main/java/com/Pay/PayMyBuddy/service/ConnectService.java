@@ -30,7 +30,7 @@ public class ConnectService {
         if (!profilRepository.existsById(idUn) || !profilRepository.existsById(idDeux)){
             return "Connection impossible";
         } else {
-            if (!connectRepository.existsById(idUn,idDeux).isEmpty()){
+            if (connectRepository.existsByIdUn_IdAndIdDeux_Id(idUn,idDeux)){
                 return "Connection déja existante";
             } else {
                 connect.setIdUn(profilService.getProfil(idUn));
