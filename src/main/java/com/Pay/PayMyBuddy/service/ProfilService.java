@@ -41,4 +41,12 @@ public class ProfilService {
             return null;
         }
     }
+
+    public Profil getOneUserByUserName(String name){
+        return profilRepository.findByName(name);
+    }
+
+    public Profil saveOneUser(Profil newProfil){
+        return profilRepository.save(newProfil);
+    }
 }

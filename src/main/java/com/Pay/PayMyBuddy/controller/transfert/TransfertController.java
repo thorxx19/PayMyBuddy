@@ -17,6 +17,7 @@ import java.util.Optional;
 @RestController
 @Slf4j
 @CrossOrigin("http://localhost:3000/")
+@RequestMapping("/transfert")
 public class TransfertController {
 
     @Autowired
@@ -25,20 +26,14 @@ public class TransfertController {
     TransfertService transfertService;
 
 
-    @PostMapping("/transfert")
+    @PostMapping
     public @ResponseBody boolean postTransfer(@RequestBody PostTransfert postTransfert){
         return transfertService.transfert(postTransfert);
     }
 
-    @GetMapping("/transfert")
+    @GetMapping
     public List<Transfer> getTransferById(@RequestParam long id){
         return transferRepository.findByIdDebtor_IdOrderByDateDesc(id);
     }
-
-    @GetMapping("/trans")
-    public Optional<Transfer> getTest(@RequestParam Long id){
-        return transferRepository.findFirstByIdDebtor_IdOrderByDateDesc(id);
-    }
-
 
 }

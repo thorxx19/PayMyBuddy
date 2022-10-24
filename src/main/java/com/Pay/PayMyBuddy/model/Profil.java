@@ -3,7 +3,6 @@ package com.Pay.PayMyBuddy.model;
 
 import lombok.*;
 import org.hibernate.Hibernate;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.*;
@@ -25,6 +24,7 @@ public class Profil {
     @NotNull
     private String lastName;
     @NotNull
+    @Column(unique = true)
     private String mail;
     @NotNull
     private String password;
@@ -40,10 +40,5 @@ public class Profil {
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         Profil profil = (Profil) o;
         return id != null && Objects.equals(id, profil.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
     }
 }

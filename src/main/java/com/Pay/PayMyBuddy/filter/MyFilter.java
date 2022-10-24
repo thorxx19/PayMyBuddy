@@ -17,7 +17,7 @@ import java.nio.charset.StandardCharsets;
 public class MyFilter implements Filter {
 
     /**
-     * method pour loger les requese et response dans le programme
+     * method pour loguer les requete et response dans le programme
      * @param request la requéte
      * @param response la réponse
      * @param filterChain le filtre
@@ -41,8 +41,8 @@ public class MyFilter implements Filter {
                 && !httpServletRequest.getServletPath().isBlank()
                 && !httpServletRequest.getServletPath().contains("favicon")
                 && httpServletRequest.getQueryString() != null
-                )
-                {
+        )
+        {
             log.info("Protocol :{} Method :{} Server :{} Port:{} End point:{}", request.getProtocol(), httpServletRequest.getMethod()
                     , request.getServerName(), request.getLocalPort(), httpServletRequest.getServletPath());
             log.info("Parametre :{}", URLDecoder.decode(httpServletRequest.getQueryString(), StandardCharsets.UTF_8));

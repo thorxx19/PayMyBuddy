@@ -14,6 +14,17 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
         current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
 
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-id: 32a0ee4048f2def848a5
+            client-secret: 90f70d4e83baad05639b80092b720a7509052133
+          google:
+            client-id: 804819726324-0u8cjp7one8bqipb0eb8ib2jb4nugsfg.apps.googleusercontent.com
+            client-secret: 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
+            scope: openid,profile,email
 logging:
   path: logs
   file:
@@ -35,8 +46,17 @@ logging:
   pattern:
     console: "%red(%d{dd/MM/yyyy}) %highlight(%-5level) [%blue(%t)] %yellow(%C{1.}): %msg%n%throwable"
     file: "%n%d{dd/MM/yyyy HH:MM:ss} %p %C{1.}%n %m%n"
-spring.main.banner-mode: off
 
+paymybuddy:
+  app:
+    secret: "payMyBuddy"
+  expires:
+    in: 604800
+
+refresh:
+  token:
+    expires:
+      in: 604800
 ---
 spring:
   datasource:

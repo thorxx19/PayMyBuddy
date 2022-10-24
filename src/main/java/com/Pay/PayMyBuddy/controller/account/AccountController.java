@@ -18,9 +18,6 @@ public class AccountController {
     @Autowired
     AccountService accountService;
 
-    @PostMapping("/add")
-    public @ResponseBody String addProfil(@Valid @RequestBody Profil profil){
-        return accountService.addProfil(profil);
-    }
+
 
 }

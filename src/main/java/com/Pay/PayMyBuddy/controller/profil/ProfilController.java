@@ -16,41 +16,25 @@ import java.util.Optional;
 @RestController
 @Slf4j
 @CrossOrigin("http://localhost:3000/")
+@RequestMapping("/clients")
 public class ProfilController {
 
     @Autowired
-    ProfilRepository profilRepository;
-    @Autowired
-    AccountRepository accountRepository;
+    private ProfilRepository profilRepository;
 
-    @Transactional(readOnly = true)
-    @GetMapping("/clientId")
-    public Optional<Profil> getClientById(@RequestParam Long id){
-        return profilRepository.findById(id);
-    }
-    @Transactional(readOnly = true)
-    @GetMapping("/clients")
+
+    @GetMapping
     public List<Profil> getClient(){
         return profilRepository.findAll();
     }
-
-    @GetMapping("/client2")
-    public void getclient2(@RequestParam String mail, String password){
-
-        List<Profil> profil = profilRepository.findByMail(mail);
-        profil.stream().forEach(x -> {if (x.getPassword().equals(password)){
-            log.info("Connect");
-        } else {
-            log.info("No Connect");
-        }
-        });
+    @GetMapping("/")
+    public Optional<Profil> getClientById(@RequestParam Long id){
+        return profilRepository.findById(id);
     }
-    @DeleteMapping("/clients")
+    @DeleteMapping("/")
     public String deleteClient(@RequestParam long id) throws ServiceException {
-
-            profilRepository.deleteById(id);
-            return "Profil delete";
-
+        profilRepository.deleteById(id);
+        return "Profil delete";
     }
 
 
