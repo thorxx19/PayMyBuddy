@@ -17,23 +17,26 @@ import java.util.Optional;
 @RestController
 @Slf4j
 @CrossOrigin("http://localhost:3000/")
-@RequestMapping("/transfert")
 public class TransfertController {
 
     @Autowired
-    TransferRepository transferRepository;
+    private TransferRepository transferRepository;
     @Autowired
-    TransfertService transfertService;
+    private TransfertService transfertService;
 
 
-    @PostMapping
-    public @ResponseBody boolean postTransfer(@RequestBody PostTransfert postTransfert){
+    @PostMapping("/transfert")
+    public @ResponseBody boolean postTransfert(@RequestBody PostTransfert postTransfert){
         return transfertService.transfert(postTransfert);
     }
 
-    @GetMapping
-    public List<Transfer> getTransferById(@RequestParam long id){
+    @GetMapping("/transferts")
+    public List<Transfer> getTransfertById(@RequestParam long id){
         return transferRepository.findByIdDebtor_IdOrderByDateDesc(id);
+    }
+    @GetMapping("/transfert")
+    public List<Transfer> getFirstTrasnfert(@RequestParam long id){
+        return transferRepository.findFirstByIdDebtor_IdOrderByDateDesc(id);
     }
 
 }

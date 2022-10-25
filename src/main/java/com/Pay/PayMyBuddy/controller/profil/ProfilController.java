@@ -27,8 +27,8 @@ public class ProfilController {
         return profilRepository.findAll();
     }
     @GetMapping("/client")
-    public Optional<Profil> getClientById(@RequestParam long id){
-        return profilRepository.findById(id);
+    public List<Profil> getClientById(@RequestParam long id){
+        return profilRepository.findByIdList(id);
     }
     @DeleteMapping("/client")
     public String deleteClient(@RequestParam long id) throws ServiceException {
