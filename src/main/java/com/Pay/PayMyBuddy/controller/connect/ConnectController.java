@@ -13,7 +13,6 @@ import java.util.List;
 @RestController
 @Slf4j
 @CrossOrigin("http://localhost:3000/")
-@RequestMapping("/connect")
 public class ConnectController {
 
     @Autowired
@@ -21,18 +20,18 @@ public class ConnectController {
     @Autowired
     ConnectService connectService;
 
-    @GetMapping
+    @GetMapping("/connects")
     public List<Connect> getConnect(){
         return connectRepository.findAll();
     }
-    @PostMapping
+    @PostMapping("/connect")
     public String postConnect(@RequestParam long idUn, long idDeux){
         return connectService.postConnect(idUn,idDeux);
     }
 
-    @GetMapping("/")
-    public Iterable<Connect> getConnectById(@RequestParam long idUn) {
-        return connectRepository.findByIdUn_Id(idUn);
+    @GetMapping("/connect")
+    public Iterable<Connect> getConnectById(@RequestParam long id) {
+        return connectRepository.findByIdUn_Id(id);
     }
 
 }

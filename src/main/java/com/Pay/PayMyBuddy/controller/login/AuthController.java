@@ -7,15 +7,12 @@ import com.Pay.PayMyBuddy.model.Profil;
 import com.Pay.PayMyBuddy.service.AccountService;
 import com.Pay.PayMyBuddy.service.ProfilService;
 import com.Pay.PayMyBuddy.service.UserRequest;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,19 +20,18 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin("*")
 public class AuthController {
 
-    private AuthenticationManager authenticationManager;
-    private ProfilService profilService;
-    private PasswordEncoder passwordEncoder;
-    private JwtTokenProvider jwtTokenProvider;
-    @Autowired
-    private AccountService accountService;
+
+    private final AuthenticationManager authenticationManager;
+    private final ProfilService profilService;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final AccountService accountService;
 
 
-    public AuthController(AuthenticationManager authenticationManager, ProfilService profilService, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider){
+    public AuthController(AuthenticationManager authenticationManager, ProfilService profilService, JwtTokenProvider jwtTokenProvider, AccountService accountService){
         this.authenticationManager =  authenticationManager;
         this.profilService = profilService;
-        this.passwordEncoder = passwordEncoder;
         this.jwtTokenProvider = jwtTokenProvider;
+        this.accountService = accountService;
     }
 
 
@@ -52,7 +48,6 @@ public class AuthController {
 
         return authResponse;
     }
-
 
 
     @PostMapping("/register")

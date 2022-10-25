@@ -16,22 +16,21 @@ import java.util.Optional;
 @RestController
 @Slf4j
 @CrossOrigin("http://localhost:3000/")
-@RequestMapping("/clients")
 public class ProfilController {
 
     @Autowired
     private ProfilRepository profilRepository;
 
 
-    @GetMapping
+    @GetMapping("/clients")
     public List<Profil> getClient(){
         return profilRepository.findAll();
     }
-    @GetMapping("/")
-    public Optional<Profil> getClientById(@RequestParam Long id){
+    @GetMapping("/client")
+    public Optional<Profil> getClientById(@RequestParam long id){
         return profilRepository.findById(id);
     }
-    @DeleteMapping("/")
+    @DeleteMapping("/client")
     public String deleteClient(@RequestParam long id) throws ServiceException {
         profilRepository.deleteById(id);
         return "Profil delete";

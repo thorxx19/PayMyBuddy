@@ -24,6 +24,12 @@ public class AccountService {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+    /**
+     *
+     * @param profilAdd
+     * @return
+     * @throws ServiceException
+     */
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<AuthResponse> addProfil(Profil profilAdd) throws ServiceException {
 
@@ -35,9 +41,10 @@ public class AccountService {
             profil.setMail(profilAdd.getMail());
             profil.setPassword(passwordEncoder.encode(profilAdd.getPassword()));
             profil.setAccountId(addNewAccount());
-            profilRepository.save(profil);
+            Profil response = profilRepository.save(profil);
 
           authResponse.setMessage("User successfully registered.");
+          authResponse.setUserId(response.getId());
           return new ResponseEntity<>(authResponse, HttpStatus.CREATED);
     }
 
