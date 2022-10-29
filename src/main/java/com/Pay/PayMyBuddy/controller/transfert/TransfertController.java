@@ -1,6 +1,7 @@
 package com.Pay.PayMyBuddy.controller.transfert;
 
 
+import com.Pay.PayMyBuddy.model.AuthResponse;
 import com.Pay.PayMyBuddy.model.PostTransfert;
 import com.Pay.PayMyBuddy.model.Transfer;
 import com.Pay.PayMyBuddy.repository.TransferRepository;
@@ -8,6 +9,7 @@ import com.Pay.PayMyBuddy.service.TransfertService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,7 +32,7 @@ public class TransfertController {
      * @return
      */
     @PostMapping("/transfert")
-    public @ResponseBody boolean postTransfert(@RequestBody PostTransfert postTransfert){
+    public ResponseEntity<AuthResponse> postTransfert(@RequestBody PostTransfert postTransfert){
         return transfertService.transfert(postTransfert);
     }
 

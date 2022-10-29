@@ -33,10 +33,13 @@ public class ProfilService {
     @Transactional(readOnly = true)
     public Profil getProfilDebtor(Long id, BigDecimal balance){
         Profil profil = profilRepository.findByProfilId(id);
-        BigDecimal solde = new BigDecimal(String.valueOf(profil.getAccountId().getBalance())) ;
-        profil.getAccountId().setBalance(solde.subtract(balance));
-        profilRepository.save(profil);
-        return profil;
+        BigDecimal solde = new BigDecimal(String.valueOf(profil.getAccountId().getBalance()));
+        if (solde.intValue() >= balance.intValue()) {
+            profil.getAccountId().setBalance(solde.subtract(balance));
+            profilRepository.save(profil);
+            return profil;
+        }
+        return null;
     }
 
     /**
@@ -80,8 +83,13 @@ public class ProfilService {
             authResponse.setMessage("Username already in use.");
             return new ResponseEntity<>(authResponse, HttpStatus.BAD_REQUEST);
         } else {
-            accountService.addProfil(profil);
-            return new ResponseEntity<>(authResponse, HttpStatus.CREATED);
+            if (profil.getName().equals("") || profil.getPassword().equals("") || profil.getLastName().equals("") || profil.getMail().equals("")){
+                return new ResponseEntity<>(authResponse, HttpStatus.BAD_REQUEST);
+            } else {
+                accountService.addProfil(profil);
+                return new ResponseEntity<>(authResponse, HttpStatus.CREATED);
+            }
+
         }
     }
 

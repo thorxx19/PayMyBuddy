@@ -23,14 +23,13 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final ProfilService profilService;
     private final JwtTokenProvider jwtTokenProvider;
-    private final AccountService accountService;
 
 
-    public AuthController(AuthenticationManager authenticationManager, ProfilService profilService, JwtTokenProvider jwtTokenProvider, AccountService accountService){
+
+    public AuthController(AuthenticationManager authenticationManager, ProfilService profilService, JwtTokenProvider jwtTokenProvider){
         this.authenticationManager =  authenticationManager;
         this.profilService = profilService;
         this.jwtTokenProvider = jwtTokenProvider;
-        this.accountService = accountService;
     }
 
     /**
