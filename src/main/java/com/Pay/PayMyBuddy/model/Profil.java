@@ -24,7 +24,6 @@ public class Profil {
     @NotNull
     private String lastName;
     @NotNull
-    @Column(unique = true)
     private String mail;
     @NotNull
     private String password;

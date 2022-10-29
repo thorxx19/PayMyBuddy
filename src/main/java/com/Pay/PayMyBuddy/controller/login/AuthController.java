@@ -52,12 +52,6 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@RequestBody Profil profil){
-        AuthResponse authResponse = new AuthResponse();
-        if(profilService.getOneUserByUserName(profil.getName()) != null) {
-            authResponse.setMessage("Username already in use.");
-            return new ResponseEntity<>(authResponse, HttpStatus.BAD_REQUEST);
-        } else {
-            return accountService.addProfil(profil);
-        }
+        return profilService.getOneUsersByMail(profil);
     }
 }

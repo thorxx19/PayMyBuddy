@@ -20,9 +20,9 @@ import java.util.Date;
 public class AccountService {
 
     @Autowired
-    ProfilRepository profilRepository;
+    private ProfilRepository profilRepository;
     @Autowired
-    PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     /**
      *
@@ -46,6 +46,25 @@ public class AccountService {
           authResponse.setMessage("User successfully registered.");
           authResponse.setUserId(response.getId());
           return new ResponseEntity<>(authResponse, HttpStatus.CREATED);
+    }
+    public ResponseEntity<AuthResponse> modifSolde(BigDecimal balance, Long id){
+
+        AuthResponse authResponse = new AuthResponse();
+
+        Profil profilUpdate = profilRepository.findUniqueProfil(id);
+
+        BigDecimal solde = profilUpdate.getAccountId().getBalance();
+        BigDecimal newSolde = solde.add(balance);
+
+        if (newSolde.intValue() >= 0){
+            authResponse.setMessage("Modification sur votre compte effectif");
+            profilUpdate.getAccountId().setBalance(newSolde);
+            profilRepository.save(profilUpdate);
+            return new ResponseEntity<>(authResponse,HttpStatus.OK);
+        } else {
+            authResponse.setMessage("Modification sur votre compte impossible");
+            return new ResponseEntity<>(authResponse,HttpStatus.FORBIDDEN);
+        }
     }
 
     private Account addNewAccount(){

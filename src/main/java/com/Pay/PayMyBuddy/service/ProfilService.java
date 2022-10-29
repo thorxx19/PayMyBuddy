@@ -1,10 +1,13 @@
 package com.Pay.PayMyBuddy.service;
 
 
+import com.Pay.PayMyBuddy.model.AuthResponse;
 import com.Pay.PayMyBuddy.model.Profil;
 import com.Pay.PayMyBuddy.repository.ProfilRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +17,10 @@ import java.util.Optional;
 @Service
 @Slf4j
 public class ProfilService {
+
+
+    @Autowired
+    private AccountService accountService;
 
     @Autowired
     ProfilRepository profilRepository;
@@ -40,6 +47,21 @@ public class ProfilService {
         } else {
             return null;
         }
+    }
+    public ResponseEntity<AuthResponse> getOneUsersByMail(Profil profil){
+        AuthResponse authResponse = new AuthResponse();
+
+        if(getProfilByMail(profil.getMail()) != null) {
+            authResponse.setMessage("Username already in use.");
+            return new ResponseEntity<>(authResponse, HttpStatus.BAD_REQUEST);
+        } else {
+            accountService.addProfil(profil);
+            return new ResponseEntity<>(authResponse, HttpStatus.CREATED);
+        }
+    }
+
+    public Profil getProfilByMail(String mail){
+        return profilRepository.findByMail(mail);
     }
 
     public Profil getOneUserByUserName(String name){
