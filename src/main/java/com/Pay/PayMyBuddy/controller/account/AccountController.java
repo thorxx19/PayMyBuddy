@@ -28,7 +28,11 @@ public class AccountController {
     @Autowired
     private AccountService accountService;
 
-
+    /**
+     * methode pour récupérer les profils pas connecter avec le profil.id
+     * @param id du profil
+     * @return une liste de profil
+     */
     @GetMapping("/mail")
     public List<Profil> getConnect(@RequestParam Long id){
         List<Profil> profilList = profilRepository.findByIdNot(id);
@@ -51,6 +55,12 @@ public class AccountController {
         log.info(listUnique.toString());
         return listUnique;
     }
+
+    /**
+     * methode pour modifier le solde d'un profil
+     * @param accountRequest la balance et l'id du profil
+     * @return 200 ou 403
+     */
     @PutMapping("/solde")
     public ResponseEntity<AuthResponse> modifSolde(@RequestBody AccountRequest accountRequest){
         return accountService.modifSolde(accountRequest.getBalance(), accountRequest.getId());

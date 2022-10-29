@@ -25,6 +25,13 @@ public class ConnectService {
     @Autowired
     private ProfilService profilService;
 
+    /**
+     * methode pour connecter 2 profil entre eux pour échanger de l'argent
+     * @param idUn l'id du débiteur
+     * @param idDeux l'ide du créditeur
+     * @return 202 ou 400
+     * @throws ServiceException
+     */
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<AuthResponse> postConnect(long idUn, long idDeux) throws ServiceException {
 

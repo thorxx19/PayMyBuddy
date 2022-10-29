@@ -21,9 +21,15 @@ public class ProfilService {
 
     @Autowired
     private AccountService accountService;
-
     @Autowired
-    ProfilRepository profilRepository;
+    private ProfilRepository profilRepository;
+
+    /**
+     * methode pour récup le profil du débiteur
+     * @param id du débiteur
+     * @param balance l'argent a enlever a sont compte
+     * @return profil
+     */
     @Transactional(readOnly = true)
     public Profil getProfilDebtor(Long id, BigDecimal balance){
         Profil profil = profilRepository.findByProfilId(id);
@@ -32,6 +38,13 @@ public class ProfilService {
         profilRepository.save(profil);
         return profil;
     }
+
+    /**
+     * methode pour récup le profil du débiteur
+     * @param id du créditeur
+     * @param balance l'argenet a créditer au profil
+     * @return profil
+     */
     @Transactional(readOnly = true)
     public Profil getProfilCredit(Long id, BigDecimal balance){
         Profil profil = profilRepository.findByProfilId(id);
@@ -40,6 +53,12 @@ public class ProfilService {
         profilRepository.save(profil);
         return profil;
     }
+
+    /**
+     * methode pour vérifier si un profil existe
+     * @param id du profila vérifié
+     * @return le profil ou null
+     */
     @Transactional(readOnly = true)
     public Profil getProfil(Long id){
         if (profilRepository.existsById(id)) {
@@ -48,6 +67,12 @@ public class ProfilService {
             return null;
         }
     }
+
+    /**
+     * methode pour vérifier si un profil existe déja avec le même mail
+     * @param profil le profil a controler
+     * @return 201 ou 400
+     */
     public ResponseEntity<AuthResponse> getOneUsersByMail(Profil profil){
         AuthResponse authResponse = new AuthResponse();
 
@@ -60,15 +85,21 @@ public class ProfilService {
         }
     }
 
+    /**
+     * methode récup un profil avec sont mail
+     * @param mail mail du profil
+     * @return le profil
+     */
     public Profil getProfilByMail(String mail){
         return profilRepository.findByMail(mail);
     }
 
+    /**
+     * methode récup un profil avec son nom
+     * @param name du profil
+     * @return le profil
+     */
     public Profil getOneUserByUserName(String name){
         return profilRepository.findByName(name);
-    }
-
-    public Profil saveOneUser(Profil newProfil){
-        return profilRepository.save(newProfil);
     }
 }

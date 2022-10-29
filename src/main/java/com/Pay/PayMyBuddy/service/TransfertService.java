@@ -18,11 +18,18 @@ import java.util.Date;
 public class TransfertService {
 
     @Autowired
-    ProfilService profilService;
+    private ProfilService profilService;
     @Autowired
-    TransferRepository transferRepository;
+    private TransferRepository transferRepository;
     @Autowired
-    ProfilRepository profilRepository;
+    private ProfilRepository profilRepository;
+
+    /**
+     * methode pour transferet de l'argent entre profil
+     * @param postTransfert l'object
+     * @return true ou false
+     * @throws ServiceException exception
+     */
     @Transactional(rollbackFor = Exception.class)
    public boolean transfert(PostTransfert postTransfert) throws ServiceException {
         Transfer transfer = new Transfer();

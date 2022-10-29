@@ -24,16 +24,31 @@ public class TransfertController {
     @Autowired
     private TransfertService transfertService;
 
-
+    /**
+     * methode pour transferais de l'argent entre profil
+     * @param postTransfert object
+     * @return
+     */
     @PostMapping("/transfert")
     public @ResponseBody boolean postTransfert(@RequestBody PostTransfert postTransfert){
         return transfertService.transfert(postTransfert);
     }
 
+    /**
+     * methode pour récup les transfert réaliser
+     * @param id l'id du profil
+     * @return une liste de transfert
+     */
     @GetMapping("/transferts")
     public List<Transfer> getTransfertById(@RequestParam long id){
         return transferRepository.findByIdDebtor_IdOrderByDateDesc(id);
     }
+
+    /**
+     * methode pour récup le dernier transfert entre profil
+     * @param id l'id du profil
+     * @return un transfert
+     */
     @GetMapping("/transfert")
     public List<Transfer> getFirstTrasnfert(@RequestParam long id){
         return transferRepository.findFirstByIdDebtor_IdOrderByDateDesc(id);

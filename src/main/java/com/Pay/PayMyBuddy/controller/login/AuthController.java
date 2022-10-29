@@ -6,8 +6,7 @@ import com.Pay.PayMyBuddy.model.AuthResponse;
 import com.Pay.PayMyBuddy.model.Profil;
 import com.Pay.PayMyBuddy.service.AccountService;
 import com.Pay.PayMyBuddy.service.ProfilService;
-import com.Pay.PayMyBuddy.service.UserRequest;
-import org.springframework.http.HttpStatus;
+import com.Pay.PayMyBuddy.model.UserRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
@@ -34,7 +33,11 @@ public class AuthController {
         this.accountService = accountService;
     }
 
-
+    /**
+     * methode pour connecter un profil avec ces identifient
+     * @param loginRequest les login du profil
+     * @return un token
+     */
     @PostMapping("/login")
     public AuthResponse login(@RequestBody UserRequest loginRequest){
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(loginRequest.getName(), loginRequest.getPassword());
@@ -49,7 +52,11 @@ public class AuthController {
         return authResponse;
     }
 
-
+    /**
+     * methode pour enregister un nouveau client
+     * @param profil un object
+     * @return 201 ou 400
+     */
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@RequestBody Profil profil){
         return profilService.getOneUsersByMail(profil);

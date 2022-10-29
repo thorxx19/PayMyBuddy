@@ -20,19 +20,25 @@ import java.util.List;
 public class ConnectController {
 
     @Autowired
-    ConnectRepository connectRepository;
+    private ConnectRepository connectRepository;
     @Autowired
-    ConnectService connectService;
+    private ConnectService connectService;
 
-    @GetMapping("/connects")
-    public List<Connect> getConnect(){
-        return connectRepository.findAll();
-    }
+    /**
+     * methode pour connecter 2 profil
+     * @param connectDto un object avec l'id du débiteur et du créditeur
+     * @return 202 ou 400
+     */
     @PostMapping("/connect")
     public ResponseEntity<AuthResponse> postConnect(@RequestBody ConnectDto connectDto){
         return connectService.postConnect(connectDto.getIdUn(),connectDto.getIdDeux());
     }
 
+    /**
+     * methode pour récup les connection pour un profil donné
+     * @param id l'id du profil
+     * @return une liste de profil connecter
+     */
     @GetMapping("/connect")
     public Iterable<Connect> getConnectById(@RequestParam long id) {
         return connectRepository.findByIdUn_Id(id);

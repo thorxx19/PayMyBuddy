@@ -25,10 +25,10 @@ public class AccountService {
     private PasswordEncoder passwordEncoder;
 
     /**
-     *
-     * @param profilAdd
-     * @return
-     * @throws ServiceException
+     * methode pour creer un nouveau profil
+     * @param profilAdd le profila add
+     * @return 201
+     * @throws ServiceException exception
      */
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<AuthResponse> addProfil(Profil profilAdd) throws ServiceException {
@@ -47,6 +47,13 @@ public class AccountService {
           authResponse.setUserId(response.getId());
           return new ResponseEntity<>(authResponse, HttpStatus.CREATED);
     }
+
+    /**
+     * methode pour modifier le solde d'un profil
+     * @param balance l'argent a créditer ou débiter
+     * @param id l'id du profil
+     * @return 200 ou 403
+     */
     public ResponseEntity<AuthResponse> modifSolde(BigDecimal balance, Long id){
 
         AuthResponse authResponse = new AuthResponse();
@@ -67,9 +74,13 @@ public class AccountService {
         }
     }
 
+    /**
+     * methode pour creer un compte bancaire au nouveau client
+     * @return un compte bancaire
+     */
     private Account addNewAccount(){
         Account account = new Account();
-        BigDecimal i = new BigDecimal(100);
+        BigDecimal i = new BigDecimal(0);
         account.setBalance(i);
         Date date = new Date();
         account.setDate(date);

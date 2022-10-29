@@ -1,4 +1,4 @@
-package com.Pay.PayMyBuddy.service;
+package com.Pay.PayMyBuddy.model;
 
 
 import lombok.Data;
