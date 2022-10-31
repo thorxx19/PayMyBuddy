@@ -106,10 +106,10 @@ public class ProfilService {
 
     /**
      * methode récup un profil avec son nom
-     * @param name du profil
+     * @param mail du profil
      * @return le profil
      */
-    public Profil getOneUserByUserName(String name){
-        return profilRepository.findByName(name);
+    public Profil getOneUserByUserName(String mail){
+        return profilRepository.findByMail(mail);
     }
 }

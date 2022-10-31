@@ -38,12 +38,13 @@ public class AuthController {
      */
     @PostMapping("/login")
     public AuthResponse login(@RequestBody UserRequest loginRequest){
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(loginRequest.getName(), loginRequest.getPassword());
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(loginRequest.getMail(), loginRequest.getPassword());
         Authentication auth = authenticationManager.authenticate(authToken);
         SecurityContextHolder.getContext().setAuthentication(auth);
         String jwtToken = jwtTokenProvider.generateJwtToken(auth);
-        Profil profil = profilService.getOneUserByUserName(loginRequest.getName());
+        Profil profil = profilService.getOneUserByUserName(loginRequest.getMail());
         AuthResponse authResponse = new AuthResponse();
+        authResponse.setMessage("Votre token");
         authResponse.setAccessToken("Bearer " + jwtToken);
         authResponse.setUserId(profil.getId());
 

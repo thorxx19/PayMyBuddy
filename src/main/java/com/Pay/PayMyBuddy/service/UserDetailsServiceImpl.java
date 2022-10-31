@@ -16,8 +16,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private ProfilRepository profilRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Profil profil = profilRepository.findByName(username);
+    public UserDetails loadUserByUsername(String mail) throws UsernameNotFoundException {
+        Profil profil = profilRepository.findByMail(mail);
         return JwtUserDetails.create(profil);
     }
 
