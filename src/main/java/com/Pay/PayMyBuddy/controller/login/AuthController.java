@@ -4,7 +4,6 @@ package com.Pay.PayMyBuddy.controller.login;
 import com.Pay.PayMyBuddy.jwt.JwtTokenProvider;
 import com.Pay.PayMyBuddy.model.AuthResponse;
 import com.Pay.PayMyBuddy.model.Profil;
-import com.Pay.PayMyBuddy.service.AccountService;
 import com.Pay.PayMyBuddy.service.ProfilService;
 import com.Pay.PayMyBuddy.model.UserRequest;
 import org.springframework.http.ResponseEntity;

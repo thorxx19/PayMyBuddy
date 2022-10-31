@@ -47,13 +47,16 @@ public class TransfertService {
             if (profilDebtor != null){
                 transfer.setIdDebtor(profilDebtor);
             } else {
+                authResponse.setMessage("Transfert pas réussie");
                 return new ResponseEntity<>(authResponse,HttpStatus.BAD_REQUEST);
             }
+            authResponse.setMessage("Transfert réussie");
             transfer.setIdCredit(profilService.getProfilCredit(postTransfert.getIdCredit(), postTransfert.getBalance()));
             transfer.setAmount(postTransfert.getBalance());
             transferRepository.save(transfer);
             return new ResponseEntity<>(authResponse,HttpStatus.OK);
         } else {
+            authResponse.setMessage("Transfert pas réussie");
             return new ResponseEntity<>(authResponse, HttpStatus.BAD_REQUEST);
         }
     }

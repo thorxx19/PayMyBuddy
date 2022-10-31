@@ -25,7 +25,7 @@ public class ProfilService {
     private ProfilRepository profilRepository;
 
     /**
-     * methode pour récup le profil du débiteur
+     * methode pour récup le profil du débiteur et faire la transaction
      * @param id du débiteur
      * @param balance l'argent a enlever a sont compte
      * @return profil
@@ -34,8 +34,10 @@ public class ProfilService {
     public Profil getProfilDebtor(Long id, BigDecimal balance){
         Profil profil = profilRepository.findByProfilId(id);
         BigDecimal solde = new BigDecimal(String.valueOf(profil.getAccountId().getBalance()));
-        if (solde.intValue() >= balance.intValue()) {
-            profil.getAccountId().setBalance(solde.subtract(balance));
+        BigDecimal costs = balance.multiply(BigDecimal.valueOf(0.005));
+        BigDecimal balanceCosts = balance.add(costs);
+        if (solde.intValue() >= balanceCosts.intValue()) {
+            profil.getAccountId().setBalance(solde.subtract(balanceCosts));
             profilRepository.save(profil);
             return profil;
         }

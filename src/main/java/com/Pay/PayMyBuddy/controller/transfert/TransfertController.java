@@ -29,7 +29,7 @@ public class TransfertController {
     /**
      * methode pour transferais de l'argent entre profil
      * @param postTransfert object
-     * @return
+     * @return 200 ou 400
      */
     @PostMapping("/transfert")
     public ResponseEntity<AuthResponse> postTransfert(@RequestBody PostTransfert postTransfert){
@@ -42,7 +42,7 @@ public class TransfertController {
      * @return une liste de transfert
      */
     @GetMapping("/transferts")
-    public List<Transfer> getTransfertById(@RequestParam long id){
+    public List<Transfer> getTransfertById(@RequestParam Long id){
         return transferRepository.findByIdDebtor_IdOrderByDateDesc(id);
     }
 
