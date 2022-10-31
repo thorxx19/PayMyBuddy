@@ -1,10 +1,14 @@
 package com.Pay.PayMyBuddy.controller.connect;
 
+import com.Pay.PayMyBuddy.model.AuthResponse;
 import com.Pay.PayMyBuddy.model.Connect;
+import com.Pay.PayMyBuddy.model.ConnectDto;
 import com.Pay.PayMyBuddy.repository.ConnectRepository;
 import com.Pay.PayMyBuddy.service.ConnectService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,23 +20,28 @@ import java.util.List;
 public class ConnectController {
 
     @Autowired
-    ConnectRepository connectRepository;
+    private ConnectRepository connectRepository;
     @Autowired
-    ConnectService connectService;
+    private ConnectService connectService;
 
-    @Transactional(readOnly = true)
-    @GetMapping("/connect")
-    public List<Connect> getConnect(){
-        return connectRepository.findAll();
-    }
+    /**
+     * methode pour connecter 2 profil
+     * @param connectDto un object avec l'id du débiteur et du créditeur
+     * @return 202 ou 400
+     */
     @PostMapping("/connect")
-    public String postConnect(@RequestParam long idUn, long idDeux){
-        return connectService.postConnect(idUn,idDeux);
+    public ResponseEntity<AuthResponse> postConnect(@RequestBody ConnectDto connectDto){
+        return connectService.postConnect(connectDto.getIdUn(),connectDto.getIdDeux());
     }
-    @Transactional(readOnly = true)
-    @GetMapping("/connectId")
-    public Iterable<Connect> getConnectById(@RequestParam long idUn) {
-        return connectRepository.findByIdUn_Id(idUn);
+
+    /**
+     * methode pour récup les connection pour un profil donné
+     * @param id l'id du profil
+     * @return une liste de profil connecter
+     */
+    @GetMapping("/connect")
+    public Iterable<Connect> getConnectById(@RequestParam long id) {
+        return connectRepository.findByIdUn_Id(id);
     }
 
 }

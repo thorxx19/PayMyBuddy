@@ -2,11 +2,14 @@ package com.Pay.PayMyBuddy.service;
 
 
 
+import com.Pay.PayMyBuddy.model.AuthResponse;
 import com.Pay.PayMyBuddy.model.Connect;
 import com.Pay.PayMyBuddy.repository.ConnectRepository;
 import com.Pay.PayMyBuddy.repository.ProfilRepository;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,27 +19,40 @@ import java.util.List;
 public class ConnectService {
 
     @Autowired
-    ConnectRepository connectRepository;
+    private ConnectRepository connectRepository;
     @Autowired
-    ProfilRepository profilRepository;
+    private ProfilRepository profilRepository;
     @Autowired
-    ProfilService profilService;
+    private ProfilService profilService;
 
+    /**
+     * methode pour connecter 2 profil entre eux pour échanger de l'argent
+     * @param idUn l'id du débiteur
+     * @param idDeux l'ide du créditeur
+     * @return 202 ou 400
+     * @throws ServiceException exception
+     */
     @Transactional(rollbackFor = Exception.class)
-    public String postConnect(long idUn, long idDeux) throws ServiceException {
+    public ResponseEntity<AuthResponse> postConnect(long idUn, long idDeux) throws ServiceException {
 
         Connect connect = new Connect();
+        AuthResponse authResponse = new AuthResponse();
+
 
         if (!profilRepository.existsById(idUn) || !profilRepository.existsById(idDeux)){
-            return "Connection impossible";
+            authResponse.setMessage("Connection impossible");
+            return new ResponseEntity<>(authResponse, HttpStatus.BAD_REQUEST);
         } else {
             if (connectRepository.existsByIdUn_IdAndIdDeux_Id(idUn,idDeux)){
-                return "Connection déja existante";
+                authResponse.setMessage("Connection déja existante");
+                return new ResponseEntity<>(authResponse, HttpStatus.BAD_REQUEST);
             } else {
+                authResponse.setMessage("Connection save");
                 connect.setIdUn(profilService.getProfil(idUn));
                 connect.setIdDeux(profilService.getProfil(idDeux));
+                authResponse.setData(profilRepository.findById(idDeux));
                 connectRepository.save(connect);
-                return "Connection save";
+                return new ResponseEntity<>(authResponse, HttpStatus.ACCEPTED);
             }
         }
     }

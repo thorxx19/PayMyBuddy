@@ -1,6 +1,7 @@
 package com.Pay.PayMyBuddy.controller.transfert;
 
 
+import com.Pay.PayMyBuddy.model.AuthResponse;
 import com.Pay.PayMyBuddy.model.PostTransfert;
 import com.Pay.PayMyBuddy.model.Transfer;
 import com.Pay.PayMyBuddy.repository.TransferRepository;
@@ -8,6 +9,7 @@ import com.Pay.PayMyBuddy.service.TransfertService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,25 +22,38 @@ import java.util.Optional;
 public class TransfertController {
 
     @Autowired
-    TransferRepository transferRepository;
+    private TransferRepository transferRepository;
     @Autowired
-    TransfertService transfertService;
+    private TransfertService transfertService;
 
-
+    /**
+     * methode pour transferais de l'argent entre profil
+     * @param postTransfert object
+     * @return 200 ou 400
+     */
     @PostMapping("/transfert")
-    public @ResponseBody boolean postTransfer(@RequestBody PostTransfert postTransfert){
+    public ResponseEntity<AuthResponse> postTransfert(@RequestBody PostTransfert postTransfert){
         return transfertService.transfert(postTransfert);
     }
 
-    @GetMapping("/transfert")
-    public List<Transfer> getTransferById(@RequestParam long id){
+    /**
+     * methode pour récup les transfert réaliser
+     * @param id l'id du profil
+     * @return une liste de transfert
+     */
+    @GetMapping("/transferts")
+    public List<Transfer> getTransfertById(@RequestParam Long id){
         return transferRepository.findByIdDebtor_IdOrderByDateDesc(id);
     }
 
-    @GetMapping("/trans")
-    public Optional<Transfer> getTest(@RequestParam Long id){
+    /**
+     * methode pour récup le dernier transfert entre profil
+     * @param id l'id du profil
+     * @return un transfert
+     */
+    @GetMapping("/transfert")
+    public List<Transfer> getFirstTrasnfert(@RequestParam long id){
         return transferRepository.findFirstByIdDebtor_IdOrderByDateDesc(id);
     }
-
 
 }

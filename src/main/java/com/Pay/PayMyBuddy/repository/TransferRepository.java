@@ -13,7 +13,7 @@ import java.util.Optional;
 @Repository
 public interface TransferRepository extends JpaRepository<Transfer, Long> {
 
-    Optional<Transfer> findFirstByIdDebtor_IdOrderByDateDesc(Long id);
+    List<Transfer> findFirstByIdDebtor_IdOrderByDateDesc(Long id);
 
     List<Transfer> findByIdDebtor_IdOrderByDateDesc(Long id);
 

@@ -1,12 +1,15 @@
 package com.Pay.PayMyBuddy.controller.profil;
 
 
+import com.Pay.PayMyBuddy.model.AuthResponse;
 import com.Pay.PayMyBuddy.model.Profil;
 import com.Pay.PayMyBuddy.repository.AccountRepository;
 import com.Pay.PayMyBuddy.repository.ProfilRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,38 +22,38 @@ import java.util.Optional;
 public class ProfilController {
 
     @Autowired
-    ProfilRepository profilRepository;
-    @Autowired
-    AccountRepository accountRepository;
+    private ProfilRepository profilRepository;
 
-    @Transactional(readOnly = true)
-    @GetMapping("/clientId")
-    public Optional<Profil> getClientById(@RequestParam Long id){
-        return profilRepository.findById(id);
-    }
-    @Transactional(readOnly = true)
+    /**
+     * methode pour récup tout les profil
+     * @return une liste de profil
+     */
     @GetMapping("/clients")
     public List<Profil> getClient(){
         return profilRepository.findAll();
     }
-
-    @GetMapping("/client2")
-    public void getclient2(@RequestParam String mail, String password){
-
-        List<Profil> profil = profilRepository.findByMail(mail);
-        profil.stream().forEach(x -> {if (x.getPassword().equals(password)){
-            log.info("Connect");
-        } else {
-            log.info("No Connect");
-        }
-        });
+    /**
+     * methode pour récup un profil avec sont id
+     * @param id l'id du profil
+     * @return un profil
+     */
+    @GetMapping("/client")
+    public List<Profil> getClientById(@RequestParam long id){
+        return profilRepository.findByIdList(id);
     }
-    @DeleteMapping("/clients")
-    public String deleteClient(@RequestParam long id) throws ServiceException {
 
-            profilRepository.deleteById(id);
-            return "Profil delete";
-
+    /**
+     * methode pour delete un client
+     * @param id l'id du client a dlete
+     * @return 200
+     * @throws ServiceException exception
+     */
+    @DeleteMapping("/client")
+    public ResponseEntity<AuthResponse> deleteClient(@RequestParam long id) throws ServiceException {
+        AuthResponse authResponse = new AuthResponse();
+        profilRepository.deleteById(id);
+        authResponse.setMessage("Profil bien delete");
+        return new ResponseEntity<>(authResponse, HttpStatus.OK);
     }
 
 

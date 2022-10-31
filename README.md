@@ -58,12 +58,12 @@ java -jar target/PayMyBuddy.jar
 Link [Actuator](https://www.baeldung.com/spring-boot-actuators) documentation
 
 ```bash
-http://localhost:9000/actuator
+http://localhost:9001/actuator
 ```
 
 ## Swagger
 Link [Swagger](https://www.baeldung.com/spring-rest-openapi-documentation) documentation
 
 ```bash
-http://localhost:9000/swagger-ui/index.html
+http://localhost:9001/swagger-ui/index.html
 ```
