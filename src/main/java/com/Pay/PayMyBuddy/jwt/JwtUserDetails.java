@@ -18,11 +18,12 @@ import java.util.List;
 public class JwtUserDetails implements UserDetails {
 
 
-    public Long id;
+    private Long id;
     private String username;
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
 
+    //todo ajouter javadoc
     private JwtUserDetails(Long id, String username, String password, Collection<? extends GrantedAuthority> authorities){
        this.id = id;
        this.username = username;

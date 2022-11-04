@@ -20,6 +20,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -74,26 +75,34 @@ public class TransfertControllerTest {
         UserRequest userUn = new UserRequest();
         UserRequest userDeux = new UserRequest();
 
-        userUn.setName("Olivier");
+        userUn.setMail("froidefond.olivier@net.fr");
         userUn.setPassword("test@O.fr");
 
-        userDeux.setName("Thierry");
+        userDeux.setMail("dupont.thierry@net.fr");
         userDeux.setPassword("test@T.fr");
 
-        AuthResponse responseUn = authController.login(userUn);
-        AuthResponse responseDeux = authController.login(userDeux);
-        Long idUn = responseUn.getUserId();
-        Long idDeux = responseDeux.getUserId();
-        String bearerUn = responseUn.getAccessToken();
+        ResponseEntity<AuthResponse> responseUn = authController.login(userUn);
+        ResponseEntity<AuthResponse> responseDeux = authController.login(userDeux);
+        Long idDeux = responseDeux.getBody().getUserId();
+        String bearerUn = responseUn.getBody().getAccessToken();
+        String bearer = responseUn.getBody().getAccessToken();
 
 
-        accountService.modifSolde(BigDecimal.valueOf(100),idUn);
-        accountService.modifSolde(BigDecimal.valueOf(100),idDeux);
+
+        try {
+            mockMvc.perform(put("/solde").header(HttpHeaders.AUTHORIZATION,bearer)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content("{\"balance\": 100}"))
+                    .andExpect(status().is2xxSuccessful())
+                    .andExpect(jsonPath("$.message").value("Modification sur votre compte effectif"));
+        } catch (Exception e) {
+            log.error("Error: ", e);
+        }
 
         try {
             mockMvc.perform(post("/transfert").header(HttpHeaders.AUTHORIZATION,bearerUn)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content("{\"idDebtor\" :" + idUn + ",\"idCredit\" : " + idDeux + ",\"balance\" : 5,\"descriptif\" : \"test\"}"))
+                    .content("{\"idCredit\" : " + idDeux + ",\"balance\" : 5,\"descriptif\" : \"test\"}"))
                     .andExpect(content().contentType("application/json"))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.message").value("Transfert réussie"));
@@ -108,21 +117,18 @@ public class TransfertControllerTest {
         UserRequest userUn = new UserRequest();
         UserRequest userDeux = new UserRequest();
 
-        userUn.setName("Olivier");
+        userUn.setMail("froidefond.olivier@net.fr");
         userUn.setPassword("test@O.fr");
 
-        userDeux.setName("Thierry");
+        userDeux.setMail("dupont.thierry@net.fr");
         userDeux.setPassword("test@T.fr");
 
-        AuthResponse responseUn = authController.login(userUn);
-        AuthResponse responseDeux = authController.login(userDeux);
-        Long idUn = responseUn.getUserId();
-        Long idDeux = responseDeux.getUserId();
-        String bearerUn = responseUn.getAccessToken();
+        ResponseEntity<AuthResponse> responseUn = authController.login(userUn);
+        String bearerUn = responseUn.getBody().getAccessToken();
 
 
-        accountService.modifSolde(BigDecimal.valueOf(100),idUn);
-        accountService.modifSolde(BigDecimal.valueOf(100),idDeux);
+        accountService.modifSolde(BigDecimal.valueOf(100));
+        accountService.modifSolde(BigDecimal.valueOf(100));
 
         try {
             mockMvc.perform(post("/transfert").header(HttpHeaders.AUTHORIZATION,bearerUn)
@@ -141,22 +147,22 @@ public class TransfertControllerTest {
         UserRequest userUn = new UserRequest();
         UserRequest userDeux = new UserRequest();
 
-        userUn.setName("Olivier");
+        userUn.setMail("froidefond.olivier@net.fr");
         userUn.setPassword("test@O.fr");
 
-        userDeux.setName("Thierry");
+        userDeux.setMail("dupont.thierry@net.fr");
         userDeux.setPassword("test@T.fr");
 
-        AuthResponse responseUn = authController.login(userUn);
-        AuthResponse responseDeux = authController.login(userDeux);
-        Long idUn = responseUn.getUserId();
-        Long idDeux = responseDeux.getUserId();
-        String bearerUn = responseUn.getAccessToken();
+        ResponseEntity<AuthResponse> responseUn = authController.login(userUn);
+        ResponseEntity<AuthResponse> responseDeux = authController.login(userDeux);
+        Long idUn = responseUn.getBody().getUserId();
+        Long idDeux = responseDeux.getBody().getUserId();
+        String bearerUn = responseUn.getBody().getAccessToken();
 
         try {
             mockMvc.perform(post("/transfert").header(HttpHeaders.AUTHORIZATION,bearerUn)
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content("{\"idDebtor\" :" + idUn + ",\"idCredit\" : " + idDeux + ",\"balance\" : 5,\"descriptif\" : \"test\"}"))
+                            .content("{\"idCredit\" : " + idDeux + ",\"balance\" : 5,\"descriptif\" : \"test\"}"))
                     .andExpect(content().contentType("application/json"))
                     .andExpect(status().is4xxClientError())
                     .andExpect(jsonPath("$.message").value("Transfert pas réussie"));
@@ -169,47 +175,67 @@ public class TransfertControllerTest {
         UserRequest userUn = new UserRequest();
         UserRequest userDeux = new UserRequest();
 
-        userUn.setName("Olivier");
+        userUn.setMail("froidefond.olivier@net.fr");
         userUn.setPassword("test@O.fr");
 
-        userDeux.setName("Thierry");
+        userDeux.setMail("dupont.thierry@net.fr");
         userDeux.setPassword("test@T.fr");
 
-        AuthResponse responseUn = authController.login(userUn);
-        AuthResponse responseDeux = authController.login(userDeux);
-        Long idUn = responseUn.getUserId();
-        Long idDeux = responseDeux.getUserId();
-        String bearerUn = responseUn.getAccessToken();
-
-        accountService.modifSolde(BigDecimal.valueOf(50),idUn);
-        accountService.modifSolde(BigDecimal.valueOf(50),idDeux);
-
-
-        PostTransfert transfert = new PostTransfert();
-        PostTransfert transfert1 = new PostTransfert();
-
-        transfert.setBalance(BigDecimal.valueOf(5));
-        transfert.setIdCredit(idDeux);
-        transfert.setIdDebtor(idUn);
-        transfert.setDescriptif("Un repas");
-
-        transfert1.setBalance(BigDecimal.valueOf(10));
-        transfert1.setIdCredit(idDeux);
-        transfert1.setIdDebtor(idUn);
-        transfert1.setDescriptif("Un jeux");
-
-        transfertService.transfert(transfert);
-        transfertService.transfert(transfert1);
+        ResponseEntity<AuthResponse> responseUn = authController.login(userUn);
+        ResponseEntity<AuthResponse> responseDeux = authController.login(userDeux);
+        Long idDeux = responseDeux.getBody().getUserId();
+        String bearerUn = responseUn.getBody().getAccessToken();
+        String bearerDeux = responseUn.getBody().getAccessToken();
 
         try {
-            mockMvc.perform(get("/transferts").header(HttpHeaders.AUTHORIZATION,bearerUn)
-                    .param("id", String.valueOf(idUn)))
+            mockMvc.perform(put("/solde").header(HttpHeaders.AUTHORIZATION,bearerUn)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content("{\"balance\": 100}"))
+                    .andExpect(status().is2xxSuccessful())
+                    .andExpect(jsonPath("$.message").value("Modification sur votre compte effectif"));
+        } catch (Exception e) {
+            log.error("Error: ", e);
+        }
+        try {
+            mockMvc.perform(put("/solde").header(HttpHeaders.AUTHORIZATION,bearerDeux)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content("{\"balance\": 100}"))
+                    .andExpect(status().is2xxSuccessful())
+                    .andExpect(jsonPath("$.message").value("Modification sur votre compte effectif"));
+        } catch (Exception e) {
+            log.error("Error: ", e);
+        }
+
+
+        try {
+            mockMvc.perform(post("/transfert").header(HttpHeaders.AUTHORIZATION,bearerUn)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content("{\"idCredit\" : " + idDeux + ",\"balance\" : 5,\"descriptif\" : \"Un repas\"}"))
                     .andExpect(content().contentType("application/json"))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$[0].description").value("Un repas"))
-                    .andExpect(jsonPath("$[0].amount").value(5.0000))
-                    .andExpect(jsonPath("$[1].description").value("Un jeux"))
-                    .andExpect(jsonPath("$[1].amount").value(10.0000));
+                    .andExpect(jsonPath("$.message").value("Transfert réussie"));
+        } catch (Exception e) {
+            log.error("Error: ", e);
+        }
+        try {
+            mockMvc.perform(post("/transfert").header(HttpHeaders.AUTHORIZATION,bearerUn)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content("{\"idCredit\" : " + idDeux + ",\"balance\" : 10,\"descriptif\" : \"Un jeux\"}"))
+                    .andExpect(content().contentType("application/json"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.message").value("Transfert réussie"));
+        } catch (Exception e) {
+            log.error("Error: ", e);
+        }
+
+        try {
+            mockMvc.perform(get("/transferts").header(HttpHeaders.AUTHORIZATION,bearerUn))
+                    .andExpect(content().contentType("application/json"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.datas[0].description").value("Un repas"))
+                    .andExpect(jsonPath("$.datas[0].amount").value("5.0000€"))
+                    .andExpect(jsonPath("$.datas[1].description").value("Un jeux"))
+                    .andExpect(jsonPath("$.datas[1].amount").value("10.0000€"));
         } catch (Exception e) {
             log.error("Error: ", e);
         }
@@ -219,45 +245,65 @@ public class TransfertControllerTest {
         UserRequest userUn = new UserRequest();
         UserRequest userDeux = new UserRequest();
 
-        userUn.setName("Olivier");
+        userUn.setMail("froidefond.olivier@net.fr");
         userUn.setPassword("test@O.fr");
 
-        userDeux.setName("Thierry");
+        userDeux.setMail("dupont.thierry@net.fr");
         userDeux.setPassword("test@T.fr");
 
-        AuthResponse responseUn = authController.login(userUn);
-        AuthResponse responseDeux = authController.login(userDeux);
-        Long idUn = responseUn.getUserId();
-        Long idDeux = responseDeux.getUserId();
-        String bearerUn = responseUn.getAccessToken();
+        ResponseEntity<AuthResponse> responseUn = authController.login(userUn);
+        ResponseEntity<AuthResponse> responseDeux = authController.login(userDeux);
+        Long idUn = responseUn.getBody().getUserId();
+        Long idDeux = responseDeux.getBody().getUserId();
+        String bearerUn = responseUn.getBody().getAccessToken();
+        String bearerDeux = responseDeux.getBody().getAccessToken();
 
-        accountService.modifSolde(BigDecimal.valueOf(50),idUn);
-        accountService.modifSolde(BigDecimal.valueOf(50),idDeux);
-
-
-        PostTransfert transfert = new PostTransfert();
-        PostTransfert transfert1 = new PostTransfert();
-
-        transfert.setBalance(BigDecimal.valueOf(5));
-        transfert.setIdCredit(idDeux);
-        transfert.setIdDebtor(idUn);
-        transfert.setDescriptif("Un repas");
-
-        transfert1.setBalance(BigDecimal.valueOf(10));
-        transfert1.setIdCredit(idDeux);
-        transfert1.setIdDebtor(idUn);
-        transfert1.setDescriptif("Un jeux");
-
-        transfertService.transfert(transfert);
-        transfertService.transfert(transfert1);
 
         try {
-            mockMvc.perform(get("/transferts").header(HttpHeaders.AUTHORIZATION,bearerUn)
-                            .param("id", String.valueOf(idUn)))
+            mockMvc.perform(put("/solde").header(HttpHeaders.AUTHORIZATION,bearerUn)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content("{\"balance\": 50}"))
+                    .andExpect(status().is2xxSuccessful())
+                    .andExpect(jsonPath("$.message").value("Modification sur votre compte effectif"));
+        } catch (Exception e) {
+            log.error("Error: ", e);
+        }
+        try {
+            mockMvc.perform(put("/solde").header(HttpHeaders.AUTHORIZATION,bearerDeux)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content("{\"balance\": 50}"))
+                    .andExpect(status().is2xxSuccessful())
+                    .andExpect(jsonPath("$.message").value("Modification sur votre compte effectif"));
+        } catch (Exception e) {
+            log.error("Error: ", e);
+        }
+        try {
+            mockMvc.perform(post("/transfert").header(HttpHeaders.AUTHORIZATION,bearerUn)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content("{\"idCredit\" : " + idDeux + ",\"balance\" : 5,\"descriptif\" : \"Un repas\"}"))
                     .andExpect(content().contentType("application/json"))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$[0].description").value("Un repas"))
-                    .andExpect(jsonPath("$[0].amount").value(5.0000));
+                    .andExpect(jsonPath("$.message").value("Transfert réussie"));
+        } catch (Exception e) {
+            log.error("Error: ", e);
+        }
+        try {
+            mockMvc.perform(post("/transfert").header(HttpHeaders.AUTHORIZATION,bearerUn)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content("{\"idCredit\" : " + idDeux + ",\"balance\" : 10,\"descriptif\" : \"Un jeux\"}"))
+                    .andExpect(content().contentType("application/json"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.message").value("Transfert réussie"));
+        } catch (Exception e) {
+            log.error("Error: ", e);
+        }
+
+        try {
+            mockMvc.perform(get("/transferts").header(HttpHeaders.AUTHORIZATION,bearerUn))
+                    .andExpect(content().contentType("application/json"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.datas[0].description").value("Un repas"))
+                    .andExpect(jsonPath("$.datas[0].amount").value("5.0000€"));
         } catch (Exception e) {
             log.error("Error: ", e);
         }

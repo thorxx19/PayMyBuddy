@@ -19,6 +19,7 @@ public class JwtTokenProvider {
     @Value("${paymybuddy.expires.in}")
     private Long EXPIRES_IN;
 
+    //todo ajouter javadoc
     public String generateJwtToken(Authentication auth){
         JwtUserDetails userDetails = (JwtUserDetails) auth.getPrincipal();
         Date expireDate = new Date(new Date().getTime() + EXPIRES_IN);

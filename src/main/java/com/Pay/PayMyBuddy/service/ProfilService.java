@@ -1,6 +1,8 @@
 package com.Pay.PayMyBuddy.service;
 
 
+
+import com.Pay.PayMyBuddy.jwt.JwtUserDetails;
 import com.Pay.PayMyBuddy.model.AuthResponse;
 import com.Pay.PayMyBuddy.model.Profil;
 import com.Pay.PayMyBuddy.repository.ProfilRepository;
@@ -8,19 +10,20 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.Optional;
+import java.util.List;
+
 
 @Service
 @Slf4j
 public class ProfilService {
 
 
-    @Autowired
-    private AccountService accountService;
+
     @Autowired
     private ProfilRepository profilRepository;
 
@@ -74,28 +77,6 @@ public class ProfilService {
     }
 
     /**
-     * methode pour vérifier si un profil existe déja avec le même mail
-     * @param profil le profil a controler
-     * @return 201 ou 400
-     */
-    public ResponseEntity<AuthResponse> getOneUsersByMail(Profil profil){
-        AuthResponse authResponse = new AuthResponse();
-
-        if(getProfilByMail(profil.getMail()) != null) {
-            authResponse.setMessage("Username already in use.");
-            return new ResponseEntity<>(authResponse, HttpStatus.BAD_REQUEST);
-        } else {
-            if (profil.getName().equals("") || profil.getPassword().equals("") || profil.getLastName().equals("") || profil.getMail().equals("")){
-                return new ResponseEntity<>(authResponse, HttpStatus.BAD_REQUEST);
-            } else {
-                accountService.addProfil(profil);
-                return new ResponseEntity<>(authResponse, HttpStatus.CREATED);
-            }
-
-        }
-    }
-
-    /**
      * methode récup un profil avec sont mail
      * @param mail mail du profil
      * @return le profil
@@ -111,5 +92,29 @@ public class ProfilService {
      */
     public Profil getOneUserByUserName(String mail){
         return profilRepository.findByMail(mail);
+    }
+    //todo javadoc
+    public ResponseEntity<AuthResponse> deleteClient(Long id){
+
+        AuthResponse authResponse = new AuthResponse();
+        profilRepository.deleteById(id);
+        authResponse.setMessage("Profil bien delete");
+        return new ResponseEntity<>(authResponse, HttpStatus.OK);
+    }
+    public List<Profil> getClientById(){
+
+        JwtUserDetails profilRecup = (JwtUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Long profilId = profilRecup.getId();
+
+        return profilRepository.findByIdList(profilId);
+    }
+    public List<Profil> getClient(){
+        return profilRepository.findAll();
+    }
+    public ResponseEntity<AuthResponse> getclientById(Long id){
+        AuthResponse authResponse = new AuthResponse();
+        authResponse.setMessage("Profil idCredit");
+        authResponse.setData(profilRepository.findByProfilId(id));
+        return new ResponseEntity<>(authResponse,HttpStatus.OK);
     }
 }

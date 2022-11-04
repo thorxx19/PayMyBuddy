@@ -5,6 +5,8 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Digits;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Objects;
@@ -21,7 +23,6 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_account")
     private Long id;
-
     private BigDecimal balance;
 
     private Date date;

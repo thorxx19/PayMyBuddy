@@ -24,36 +24,15 @@ public class AccountController {
     @Autowired
     private ProfilRepository profilRepository;
     @Autowired
-    private ConnectRepository connectRepository;
-    @Autowired
     private AccountService accountService;
 
     /**
      * methode pour récupérer les profils pas connecter avec le profil.id
-     * @param id du profil
      * @return une liste de profil
      */
     @GetMapping("/mail")
-    public List<Profil> getConnect(@RequestParam Long id){
-        List<Profil> profilList = profilRepository.findByIdNot(id);
-        List<Connect> connectList = connectRepository.findByIdUn_Id(id);
-        List<Profil> listUnique = new ArrayList<>();
-        List<Long> uniqueLongConnect = new ArrayList<>();
-        List<Long> uniqueLongProfil = new ArrayList<>();
-
-        for (Connect connect: connectList) {
-            uniqueLongConnect.add(connect.getIdDeux().getId());
-        }
-        for (Profil profil: profilList) {
-            uniqueLongProfil.add(profil.getId());
-        }
-        for (Long longInt:uniqueLongProfil) {
-            if (!uniqueLongConnect.contains(longInt)){
-                listUnique.add(profilRepository.findUniqueProfil(longInt));
-            }
-        }
-        log.info(listUnique.toString());
-        return listUnique;
+    public List<Profil> getConnect(){
+       return accountService.getConnect();
     }
 
     /**
@@ -62,8 +41,8 @@ public class AccountController {
      * @return 200 ou 403
      */
     @PutMapping("/solde")
-    public ResponseEntity<AuthResponse> modifSolde(@RequestBody AccountRequest accountRequest){
-        return accountService.modifSolde(accountRequest.getBalance(), accountRequest.getId());
+    public ResponseEntity<AuthResponse> modifSolde(@Valid @RequestBody AccountRequest accountRequest){
+        return accountService.modifSolde(accountRequest.getBalance());
     }
 
 }

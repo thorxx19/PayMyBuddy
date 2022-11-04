@@ -19,6 +19,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -70,17 +71,17 @@ class ConnectControllerTest {
         UserRequest userUn = new UserRequest();
         UserRequest userDeux = new UserRequest();
 
-        userUn.setName("Olivier");
+        userUn.setMail("froidefond.olivier@net.fr");
         userUn.setPassword("test@O.fr");
 
-        userDeux.setName("Thierry");
+        userDeux.setMail("dupont.thierry@net.fr");
         userDeux.setPassword("test@T.fr");
 
-        AuthResponse responseUn = authController.login(userUn);
-        AuthResponse responseDeux = authController.login(userDeux);
-        Long idUn = responseUn.getUserId();
-        String bearer = responseUn.getAccessToken();
-        Long idDeux = responseDeux.getUserId();
+        ResponseEntity<AuthResponse> responseUn = authController.login(userUn);
+        ResponseEntity<AuthResponse> responseDeux = authController.login(userDeux);
+        Long idUn = responseUn.getBody().getUserId();
+        String bearer = responseUn.getBody().getAccessToken();
+        Long idDeux = responseDeux.getBody().getUserId();
 
         try {
             mockMvc.perform(post("/connect").contentType(MediaType.APPLICATION_JSON)
@@ -98,19 +99,26 @@ class ConnectControllerTest {
         UserRequest userUn = new UserRequest();
         UserRequest userDeux = new UserRequest();
 
-        userUn.setName("Olivier");
+        userUn.setMail("froidefond.olivier@net.fr");
         userUn.setPassword("test@O.fr");
 
-        userDeux.setName("Thierry");
+        userDeux.setMail("dupont.thierry@net.fr");
         userDeux.setPassword("test@T.fr");
 
-        AuthResponse responseUn = authController.login(userUn);
-        AuthResponse responseDeux = authController.login(userDeux);
-        Long idUn = responseUn.getUserId();
-        String bearer = responseUn.getAccessToken();
-        Long idDeux = responseDeux.getUserId();
+        ResponseEntity<AuthResponse> responseUn = authController.login(userUn);
+        ResponseEntity<AuthResponse> responseDeux = authController.login(userDeux);
+        Long idUn = responseUn.getBody().getUserId();
+        String bearer = responseUn.getBody().getAccessToken();
+        Long idDeux = responseDeux.getBody().getUserId();
 
-        connectService.postConnect(idUn,idDeux);
+        try {
+            mockMvc.perform(post("/connect").contentType(MediaType.APPLICATION_JSON)
+                    .content("{\"idDeux\" : " + idDeux + " }")
+                    .header(HttpHeaders.AUTHORIZATION,bearer)).andExpect(status().is2xxSuccessful());
+        } catch (Exception e) {
+            log.error("Error: ", e);
+
+        }
 
         try {
             mockMvc.perform(post("/connect").contentType(MediaType.APPLICATION_JSON)
@@ -127,17 +135,16 @@ class ConnectControllerTest {
 
         UserRequest userUn = new UserRequest();
 
-        userUn.setName("Olivier");
+        userUn.setMail("froidefond.olivier@net.fr");
         userUn.setPassword("test@O.fr");
 
-        AuthResponse responseUn = authController.login(userUn);
-        Long idUn = responseUn.getUserId();
-        String bearer = responseUn.getAccessToken();
+        ResponseEntity<AuthResponse> responseUn = authController.login(userUn);
+        String bearer = responseUn.getBody().getAccessToken();
 
 
         try {
             mockMvc.perform(post("/connect").contentType(MediaType.APPLICATION_JSON)
-                    .content("{\"idUn\" :" + idUn + ",\"idDeux\" : 500000 }")
+                    .content("{\"idDeux\" : 500000 }")
                     .header(HttpHeaders.AUTHORIZATION,bearer)).andExpect(status().is4xxClientError());
         } catch (Exception e) {
             log.error("Error: ", e);
@@ -151,27 +158,32 @@ class ConnectControllerTest {
         UserRequest userUn = new UserRequest();
         UserRequest userDeux = new UserRequest();
 
-        userUn.setName("Olivier");
+        userUn.setMail("froidefond.olivier@net.fr");
         userUn.setPassword("test@O.fr");
 
-        userDeux.setName("Thierry");
+        userDeux.setMail("dupont.thierry@net.fr");
         userDeux.setPassword("test@T.fr");
 
-        AuthResponse responseUn = authController.login(userUn);
-        AuthResponse responseDeux = authController.login(userDeux);
-        Long idUn = responseUn.getUserId();
-        String bearer = responseUn.getAccessToken();
-        Long idDeux = responseDeux.getUserId();
-
-        connectService.postConnect(idUn,idDeux);
+        ResponseEntity<AuthResponse> responseUn = authController.login(userUn);
+        ResponseEntity<AuthResponse> responseDeux = authController.login(userDeux);
+        String bearer = responseUn.getBody().getAccessToken();
+        Long idDeux = responseDeux.getBody().getUserId();
 
         try {
-            mockMvc.perform(get("/connect").header(HttpHeaders.AUTHORIZATION,bearer)
-                    .param("id", String.valueOf(idUn)))
+            mockMvc.perform(post("/connect").contentType(MediaType.APPLICATION_JSON)
+                    .content("{\"idDeux\" : " + idDeux + " }")
+                    .header(HttpHeaders.AUTHORIZATION,bearer)).andExpect(status().is2xxSuccessful());
+        } catch (Exception e) {
+            log.error("Error: ", e);
+
+        }
+
+        try {
+            mockMvc.perform(get("/connect").header(HttpHeaders.AUTHORIZATION,bearer))
                     .andExpect(status().is2xxSuccessful())
                     .andExpect(content().contentType("application/json"))
-                    .andExpect(jsonPath("$[0].idUn.name").value("Olivier"))
-                    .andExpect(jsonPath("$[0].idDeux.name").value("Thierry"));
+                    .andExpect(jsonPath("$.datas[0].idUn.name").value("Olivier"))
+                    .andExpect(jsonPath("$.datas[0].idDeux.name").value("Thierry"));
         } catch (Exception e) {
             log.error("Error: ", e);
         }
@@ -181,12 +193,12 @@ class ConnectControllerTest {
     void getMail(){
 
         UserRequest user = new UserRequest();
-        user.setName("Olivier");
+        user.setMail("froidefond.olivier@net.fr");
         user.setPassword("test@O.fr");
 
-        AuthResponse response = authController.login(user);
-        String bearer = response.getAccessToken();
-        Long id = response.getUserId();
+        ResponseEntity<AuthResponse> response = authController.login(user);
+        String bearer = response.getBody().getAccessToken();
+        Long id = response.getBody().getUserId();
 
         try {
             mockMvc.perform(get("/mail").header(HttpHeaders.AUTHORIZATION,bearer)
@@ -203,17 +215,16 @@ class ConnectControllerTest {
     void putSolde(){
 
         UserRequest user = new UserRequest();
-        user.setName("Olivier");
+        user.setMail("froidefond.olivier@net.fr");
         user.setPassword("test@O.fr");
 
-        AuthResponse response = authController.login(user);
-        String bearer = response.getAccessToken();
-        Long id = response.getUserId();
+        ResponseEntity<AuthResponse> response = authController.login(user);
+        String bearer = response.getBody().getAccessToken();
 
         try {
             mockMvc.perform(put("/solde").header(HttpHeaders.AUTHORIZATION,bearer)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content("{\"id\":\" " + id + "\",\"balance\": 100}"))
+                    .content("{\"balance\": 100}"))
                     .andExpect(status().is2xxSuccessful())
                     .andExpect(jsonPath("$.message").value("Modification sur votre compte effectif"));
         } catch (Exception e) {
@@ -225,12 +236,12 @@ class ConnectControllerTest {
     void putSoldeError(){
 
         UserRequest user = new UserRequest();
-        user.setName("Olivier");
+        user.setMail("froidefond.olivier@net.fr");
         user.setPassword("test@O.fr");
 
-        AuthResponse response = authController.login(user);
-        String bearer = response.getAccessToken();
-        Long id = response.getUserId();
+        ResponseEntity<AuthResponse> response = authController.login(user);
+        String bearer = response.getBody().getAccessToken();
+        Long id = response.getBody().getUserId();
 
         try {
             mockMvc.perform(put("/solde").header(HttpHeaders.AUTHORIZATION,bearer)

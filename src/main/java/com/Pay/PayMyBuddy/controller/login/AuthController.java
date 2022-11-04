@@ -4,32 +4,36 @@ package com.Pay.PayMyBuddy.controller.login;
 import com.Pay.PayMyBuddy.jwt.JwtTokenProvider;
 import com.Pay.PayMyBuddy.model.AuthResponse;
 import com.Pay.PayMyBuddy.model.Profil;
+import com.Pay.PayMyBuddy.service.AuthService;
 import com.Pay.PayMyBuddy.service.ProfilService;
 import com.Pay.PayMyBuddy.model.UserRequest;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/auth")
 @CrossOrigin("*")
+@Slf4j
 public class AuthController {
 
 
-    private final AuthenticationManager authenticationManager;
-    private final ProfilService profilService;
-    private final JwtTokenProvider jwtTokenProvider;
+    @Autowired
+    private ProfilService profilService;
 
+    @Autowired
+    private AuthService authService;
 
-
-    public AuthController(AuthenticationManager authenticationManager, ProfilService profilService, JwtTokenProvider jwtTokenProvider){
-        this.authenticationManager =  authenticationManager;
-        this.profilService = profilService;
-        this.jwtTokenProvider = jwtTokenProvider;
-    }
 
     /**
      * methode pour connecter un profil avec ces identifient
@@ -37,18 +41,8 @@ public class AuthController {
      * @return un token
      */
     @PostMapping("/login")
-    public AuthResponse login(@RequestBody UserRequest loginRequest){
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(loginRequest.getMail(), loginRequest.getPassword());
-        Authentication auth = authenticationManager.authenticate(authToken);
-        SecurityContextHolder.getContext().setAuthentication(auth);
-        String jwtToken = jwtTokenProvider.generateJwtToken(auth);
-        Profil profil = profilService.getOneUserByUserName(loginRequest.getMail());
-        AuthResponse authResponse = new AuthResponse();
-        authResponse.setMessage("Votre token");
-        authResponse.setAccessToken("Bearer " + jwtToken);
-        authResponse.setUserId(profil.getId());
-
-        return authResponse;
+    public ResponseEntity<AuthResponse> login(@RequestBody UserRequest loginRequest){
+        return authService.login(loginRequest);
     }
 
     /**
@@ -57,7 +51,7 @@ public class AuthController {
      * @return 201 ou 400
      */
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@RequestBody Profil profil){
-        return profilService.getOneUsersByMail(profil);
+    public ResponseEntity<AuthResponse> register(@Valid @RequestBody Profil profil, Errors errors){
+        return authService.register(profil, errors);
     }
 }

@@ -4,7 +4,9 @@ package com.Pay.PayMyBuddy.model;
 import lombok.*;
 import org.hibernate.Hibernate;
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 import java.util.*;
 
 @Entity
@@ -18,14 +20,16 @@ public class Profil {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "client_id")
     private Long id;
-    @NotNull
+    @NotEmpty
     private String name;
     @Column(name = "last_name")
-    @NotNull
+    @NotEmpty
     private String lastName;
-    @NotNull
+    @NotEmpty
+    @Pattern(regexp = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9- ]+\\.)+[a-zA-Z]{2,7}", message = "Mail non valide")
     private String mail;
-    @NotNull
+    @NotEmpty
+    @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$", message = "Password non valide")
     private String password;
     @OneToOne(
             cascade = CascadeType.ALL

@@ -14,6 +14,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.math.BigDecimal;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -42,7 +44,8 @@ class AuthControllerTest {
         profil.setName("Olivier");
         profil.setLastName("FROIDEFOND");
         profil.setMail("test@test.fr");
-        profil.setPassword("test@O.fr");
+        profil.setPassword("test2@O.fr");
+
 
         accountService.addProfil(profil);
     }
@@ -53,7 +56,7 @@ class AuthControllerTest {
         try {
             mockMvc.perform(post("/auth/register")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content("{\"name\" : \"robert\",\"lastName\" : \"FERRAT\",\"mail\" : \"lange@test.fr\",\"password\" : \"admin@O.test\"}"))
+                            .content("{\"name\" : \"robert\",\"lastName\" : \"FERRAT\",\"mail\" : \"lange@test.fr\",\"password\" : \"test2@O.fr\"}"))
                     .andExpect(status().isCreated());
         } catch (Exception e) {
             log.error("Error :", e);
@@ -65,7 +68,7 @@ class AuthControllerTest {
         try {
             mockMvc.perform(post("/auth/register")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content("{\"name\" : \"Olivier\",\"lastName\" : \"FROIDEFOND\",\"mail\" : \"test@test.fr\",\"password\" : \"test@O.fr\"}"))
+                    .content("{\"name\" : \"Olivier\",\"lastName\" : \"FROIDEFOND\",\"mail\" : \"test@test.fr\",\"password\" : \"test2@O.fr\"}"))
                     .andExpect(status().is4xxClientError());
         } catch (Exception e) {
             log.error("Error :", e);
@@ -89,7 +92,7 @@ class AuthControllerTest {
     @DisplayName("test le end point POST/auth/login")
     void postLogin(){
         try {
-            mockMvc.perform(post("/auth/login").contentType(MediaType.APPLICATION_JSON).content("{\"name\" : \"Olivier\",\"password\" : \"test@O.fr\"}"))
+            mockMvc.perform(post("/auth/login").contentType(MediaType.APPLICATION_JSON).content("{\"mail\" : \"test@test.fr\",\"password\" : \"test2@O.fr\"}"))
                     .andExpect(status().isOk());
         } catch (Exception e) {
             log.error("Error :", e);

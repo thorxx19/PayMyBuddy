@@ -14,7 +14,6 @@ import java.util.Optional;
 @Repository
 public interface ProfilRepository extends JpaRepository<Profil, Long> {
 
-    Profil findByName(String name);
     Profil findByMail(String name);
 
     @Query("SELECT x FROM Profil x WHERE x.id = ?1")

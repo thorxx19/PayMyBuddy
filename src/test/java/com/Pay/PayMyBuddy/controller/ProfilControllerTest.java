@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -54,7 +55,7 @@ class ProfilControllerTest {
         Profil profil = new Profil();
         profil.setName("Olivier");
         profil.setLastName("FROIDEFOND");
-        profil.setMail("test@test.fr");
+        profil.setMail("olivier.test@net.fr");
         profil.setPassword("test@O.fr");
 
         accountService.addProfil(profil);
@@ -66,12 +67,12 @@ class ProfilControllerTest {
     void getCliendById(){
 
         UserRequest user = new UserRequest();
-        user.setName("Olivier");
+        user.setMail("olivier.test@net.fr");
         user.setPassword("test@O.fr");
 
-        AuthResponse response = authController.login(user);
-        String bearer = response.getAccessToken();
-        Long id = response.getUserId();
+        ResponseEntity<AuthResponse> response = authController.login(user);
+        String bearer = response.getBody().getAccessToken();
+        Long id = response.getBody().getUserId();
 
         try {
             mockMvc.perform(get("/client").header(HttpHeaders.AUTHORIZATION,bearer)
@@ -89,11 +90,11 @@ class ProfilControllerTest {
     void getAllClients(){
 
         UserRequest user = new UserRequest();
-        user.setName("Olivier");
+        user.setMail("olivier.test@net.fr");
         user.setPassword("test@O.fr");
 
-        AuthResponse response = authController.login(user);
-        String bearer = response.getAccessToken();
+        ResponseEntity<AuthResponse> response = authController.login(user);
+        String bearer = response.getBody().getAccessToken();
 
         try {
             mockMvc.perform(get("/clients").header(HttpHeaders.AUTHORIZATION,bearer))
@@ -109,12 +110,12 @@ class ProfilControllerTest {
     @DisplayName("tes le end point DELETE/client")
     void deleteClientsById(){
         UserRequest user = new UserRequest();
-        user.setName("Olivier");
+        user.setMail("olivier.test@net.fr");
         user.setPassword("test@O.fr");
 
-        AuthResponse response = authController.login(user);
-        Long id = response.getUserId();
-        String bearer = response.getAccessToken();
+        ResponseEntity<AuthResponse> response = authController.login(user);
+        Long id = response.getBody().getUserId();
+        String bearer = response.getBody().getAccessToken();
         try {
             mockMvc.perform(delete("/client").header(HttpHeaders.AUTHORIZATION,bearer)
                             .param("id",String.valueOf(id)))

@@ -1,28 +1,45 @@
 package com.Pay.PayMyBuddy.service;
 
+import com.Pay.PayMyBuddy.jwt.JwtUserDetails;
 import com.Pay.PayMyBuddy.model.Account;
 import com.Pay.PayMyBuddy.model.AuthResponse;
+import com.Pay.PayMyBuddy.model.Connect;
 import com.Pay.PayMyBuddy.model.Profil;
 import com.Pay.PayMyBuddy.repository.AccountRepository;
+import com.Pay.PayMyBuddy.repository.ConnectRepository;
 import com.Pay.PayMyBuddy.repository.ProfilRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.config.core.GrantedAuthorityDefaults;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 @Service
+@Slf4j
 public class AccountService {
 
     @Autowired
     private ProfilRepository profilRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private ConnectRepository connectRepository;
 
     /**
      * methode pour creer un nouveau profil
@@ -51,14 +68,15 @@ public class AccountService {
     /**
      * methode pour modifier le solde d'un profil
      * @param balance l'argent a créditer ou débiter
-     * @param id l'id du profil
      * @return 200 ou 403
      */
-    public ResponseEntity<AuthResponse> modifSolde(BigDecimal balance, Long id){
+    public ResponseEntity<AuthResponse> modifSolde(BigDecimal balance){
 
+        JwtUserDetails profil = (JwtUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Long profilId = profil.getId();
         AuthResponse authResponse = new AuthResponse();
 
-        Profil profilUpdate = profilRepository.findUniqueProfil(id);
+        Profil profilUpdate = profilRepository.findUniqueProfil(profilId);
 
         BigDecimal solde = profilUpdate.getAccountId().getBalance();
         BigDecimal newSolde = solde.add(balance);
@@ -72,6 +90,31 @@ public class AccountService {
             authResponse.setMessage("Modification sur votre compte impossible");
             return new ResponseEntity<>(authResponse,HttpStatus.FORBIDDEN);
         }
+    }
+    //todo ajouter javadoc
+    public List<Profil> getConnect(){
+
+        JwtUserDetails profilRecup = (JwtUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Long profilId = profilRecup.getId();
+
+        List<Profil> profilList = profilRepository.findByIdNot(profilId);
+        List<Connect> connectList = connectRepository.findByIdUn_Id(profilId);
+        List<Profil> listUnique = new ArrayList<>();
+        List<Long> uniqueLongConnect = new ArrayList<>();
+        List<Long> uniqueLongProfil = new ArrayList<>();
+
+        for (Connect connect: connectList) {
+            uniqueLongConnect.add(connect.getIdDeux().getId());
+        }
+        for (Profil profil: profilList) {
+            uniqueLongProfil.add(profil.getId());
+        }
+        for (Long longInt:uniqueLongProfil) {
+            if (!uniqueLongConnect.contains(longInt)){
+                listUnique.add(profilRepository.findUniqueProfil(longInt));
+            }
+        }
+        return listUnique;
     }
 
     /**

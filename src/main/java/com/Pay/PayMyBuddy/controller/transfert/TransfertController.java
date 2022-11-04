@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,8 +22,7 @@ import java.util.Optional;
 @CrossOrigin("http://localhost:3000/")
 public class TransfertController {
 
-    @Autowired
-    private TransferRepository transferRepository;
+
     @Autowired
     private TransfertService transfertService;
 
@@ -32,28 +32,26 @@ public class TransfertController {
      * @return 200 ou 400
      */
     @PostMapping("/transfert")
-    public ResponseEntity<AuthResponse> postTransfert(@RequestBody PostTransfert postTransfert){
+    public ResponseEntity<AuthResponse> postTransfert(@Valid @RequestBody PostTransfert postTransfert){
         return transfertService.transfert(postTransfert);
     }
 
     /**
      * methode pour récup les transfert réaliser
-     * @param id l'id du profil
      * @return une liste de transfert
      */
     @GetMapping("/transferts")
-    public List<Transfer> getTransfertById(@RequestParam Long id){
-        return transferRepository.findByIdDebtor_IdOrderByDateDesc(id);
+    public ResponseEntity<AuthResponse> getTransfertById(){
+        return transfertService.getTransfertById();
     }
 
     /**
      * methode pour récup le dernier transfert entre profil
-     * @param id l'id du profil
      * @return un transfert
      */
     @GetMapping("/transfert")
-    public List<Transfer> getFirstTrasnfert(@RequestParam long id){
-        return transferRepository.findFirstByIdDebtor_IdOrderByDateDesc(id);
+    public List<Transfer> getFirstTrasnfert(){
+        return transfertService.getFirstTrasnfert();
     }
 
 }

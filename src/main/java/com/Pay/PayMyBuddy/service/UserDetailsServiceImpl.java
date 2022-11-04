@@ -14,13 +14,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     private ProfilRepository profilRepository;
-
+    //todo ajouter javadoc
     @Override
     public UserDetails loadUserByUsername(String mail) throws UsernameNotFoundException {
         Profil profil = profilRepository.findByMail(mail);
         return JwtUserDetails.create(profil);
     }
-
+    //todo ajouter javadoc
     public UserDetails loadUserById(Long id){
         Profil profil = profilRepository.findById(id).get();
         return JwtUserDetails.create(profil);

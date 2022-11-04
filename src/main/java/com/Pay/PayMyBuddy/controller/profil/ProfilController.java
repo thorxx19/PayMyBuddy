@@ -5,6 +5,7 @@ import com.Pay.PayMyBuddy.model.AuthResponse;
 import com.Pay.PayMyBuddy.model.Profil;
 import com.Pay.PayMyBuddy.repository.AccountRepository;
 import com.Pay.PayMyBuddy.repository.ProfilRepository;
+import com.Pay.PayMyBuddy.service.ProfilService;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,23 +24,24 @@ public class ProfilController {
 
     @Autowired
     private ProfilRepository profilRepository;
+    @Autowired
+    private ProfilService profilService;
 
     /**
      * methode pour récup tout les profil
      * @return une liste de profil
      */
     @GetMapping("/clients")
-    public List<Profil> getClient(){
-        return profilRepository.findAll();
+    public List<Profil> getClients(){
+        return profilService.getClient();
     }
     /**
      * methode pour récup un profil avec sont id
-     * @param id l'id du profil
      * @return un profil
      */
     @GetMapping("/client")
-    public List<Profil> getClientById(@RequestParam long id){
-        return profilRepository.findByIdList(id);
+    public List<Profil> getClient(){
+        return profilService.getClientById();
     }
 
     /**
@@ -49,12 +51,13 @@ public class ProfilController {
      * @throws ServiceException exception
      */
     @DeleteMapping("/client")
-    public ResponseEntity<AuthResponse> deleteClient(@RequestParam long id) throws ServiceException {
-        AuthResponse authResponse = new AuthResponse();
-        profilRepository.deleteById(id);
-        authResponse.setMessage("Profil bien delete");
-        return new ResponseEntity<>(authResponse, HttpStatus.OK);
+    public ResponseEntity<AuthResponse> deleteClient(@RequestParam Long id) throws ServiceException {
+       return profilService.deleteClient(id);
     }
 
+    @GetMapping("/clientId")
+    public ResponseEntity<AuthResponse> getclientById(@RequestParam Long id){
+        return profilService.getclientById(id);
+    }
 
 }

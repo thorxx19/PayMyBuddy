@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -30,18 +31,17 @@ public class ConnectController {
      * @return 202 ou 400
      */
     @PostMapping("/connect")
-    public ResponseEntity<AuthResponse> postConnect(@RequestBody ConnectDto connectDto){
-        return connectService.postConnect(connectDto.getIdUn(),connectDto.getIdDeux());
+    public ResponseEntity<AuthResponse> postConnect(@Valid @RequestBody ConnectDto connectDto){
+        return connectService.postConnect(connectDto.getIdDeux());
     }
 
     /**
      * methode pour récup les connection pour un profil donné
-     * @param id l'id du profil
      * @return une liste de profil connecter
      */
     @GetMapping("/connect")
-    public Iterable<Connect> getConnectById(@RequestParam long id) {
-        return connectRepository.findByIdUn_Id(id);
+    public ResponseEntity<AuthResponse> getConnectById() {
+        return connectService.getConnectById();
     }
 
 }

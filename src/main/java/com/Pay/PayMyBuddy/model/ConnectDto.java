@@ -2,11 +2,13 @@ package com.Pay.PayMyBuddy.model;
 
 import lombok.Data;
 
+import javax.validation.constraints.Digits;
+
 @Data
 public class ConnectDto {
 
-    private long idUn;
 
+    @Digits(integer = 15, fraction = 0)
     private long idDeux;
 
 }
