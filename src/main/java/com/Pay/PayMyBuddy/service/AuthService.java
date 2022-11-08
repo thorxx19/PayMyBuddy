@@ -65,8 +65,7 @@ public class AuthService {
                     || profil.getPassword().equals("")
                     || profil.getLastName().equals("")
                     || profil.getMail().equals("")
-                    || errors.hasErrors()
-            ) {
+                    || errors.hasErrors()) {
                 authResponse.setMessage("Mdp ou password non valide");
                 return new ResponseEntity<>(authResponse, HttpStatus.BAD_REQUEST);
             } else {

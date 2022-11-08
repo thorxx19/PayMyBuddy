@@ -4,17 +4,20 @@ package com.Pay.PayMyBuddy.security;
 import com.Pay.PayMyBuddy.jwt.JwtAuthenticationEntryPoint;
 import com.Pay.PayMyBuddy.jwt.JwtAuthenticationFilter;
 import com.Pay.PayMyBuddy.service.UserDetailsServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -23,10 +26,11 @@ import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    public class SecurityConfig {
 
+    @Autowired
     private UserDetailsServiceImpl userDetailsService;
-
+    @Autowired
     private JwtAuthenticationEntryPoint handler;
 
     private static final String[] AUTH_WHITELIST = {
@@ -42,28 +46,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/swagger-ui/**"};
 
 
-   public SecurityConfig(UserDetailsServiceImpl userDetailsService, JwtAuthenticationEntryPoint handler){
-       this.userDetailsService = userDetailsService;
-       this.handler = handler;
-   }
 
    @Bean
    public JwtAuthenticationFilter jwtAuthenticationFilter(){
        return new JwtAuthenticationFilter();
    }
-   @Bean(BeanIds.AUTHENTICATION_MANAGER)
-   @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-   }
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
    @Bean
     public PasswordEncoder passwordEncoder(){
        return new BCryptPasswordEncoder();
    }
-   @Override
-    public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-       authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-   }
+
 
    @Bean
     public CorsFilter corsFilter(){
@@ -83,8 +79,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
        return new CorsFilter(source);
    }
 
-   @Override
-    public void configure(HttpSecurity httpSecurity) throws Exception {
+   @Bean
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
 
        httpSecurity
                .cors()
@@ -101,7 +97,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                .permitAll()
                .anyRequest().authenticated();
        httpSecurity.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-
+       return httpSecurity.build();
    }
 
 }
