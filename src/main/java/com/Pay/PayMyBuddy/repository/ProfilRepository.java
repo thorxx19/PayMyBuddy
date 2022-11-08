@@ -4,35 +4,34 @@ import com.Pay.PayMyBuddy.model.Profil;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 
 @Repository
-public interface ProfilRepository extends JpaRepository<Profil, Long> {
+public interface ProfilRepository extends JpaRepository<Profil, UUID> {
 
     Profil findByMail(String name);
 
     @Query("SELECT x FROM Profil x WHERE x.id = ?1")
-    Profil findByProfilId(long id);
-    boolean existsByMail(String mail);
+    Profil findByProfilUuid(UUID id);
 
     @Query("select p from Profil p where p.id = ?1")
-    List<Profil> findByIdList(Long id);
+    List<Profil> findByIdList(UUID id);
 
     @Query("select p from Profil p where p.id = ?1")
-    Profil findUniqueProfil(Long id);
+    Profil findUniqueProfil(UUID id);
 
-    @Query(
-            value = "SELECT * FROM client p\n" +
-                    "LEFT JOIN connection c ON p.client_id = c.id_client_deux\n" +
-                    "WHERE p.client_id <> ?1 AND (c.id_client_un IS NULL or c.id_client_un <> ?1)\n" +
-                    "ORDER BY p.mail ASC",
-            nativeQuery = true)
-    List<Profil> findTest(Long id);
+    List<Profil> findByIdNot(UUID id);
 
-    List<Profil> findByIdNot(Long id);
+    @Query("select (count(p) > 0) from Profil p where p.id = :id")
+    boolean existsByIdEquals(@Param("id") UUID id);
+
+    @Override
+    void deleteById(UUID id);
 }

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ConnectService {
@@ -35,16 +36,16 @@ public class ConnectService {
      * @throws ServiceException exception
      */
     @Transactional(rollbackFor = Exception.class)
-    public ResponseEntity<AuthResponse> postConnect(long idDeux) throws ServiceException {
+    public ResponseEntity<AuthResponse> postConnect(UUID idDeux) throws ServiceException {
 
         JwtUserDetails profil = (JwtUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Long profilId = profil.getId();
+        UUID profilId = profil.getId();
 
         Connect connect = new Connect();
         AuthResponse authResponse = new AuthResponse();
 
 
-        if (!profilRepository.existsById(profilId) || !profilRepository.existsById(idDeux)){
+        if (!profilRepository.existsByIdEquals(profilId) || !profilRepository.existsByIdEquals(idDeux)){
             authResponse.setMessage("Connection impossible");
             return new ResponseEntity<>(authResponse, HttpStatus.BAD_REQUEST);
         } else {
@@ -55,7 +56,7 @@ public class ConnectService {
                 authResponse.setMessage("Connection save");
                 connect.setIdUn(profilService.getProfil(profilId));
                 connect.setIdDeux(profilService.getProfil(idDeux));
-                authResponse.setData(profilRepository.findById(idDeux));
+                authResponse.setData(profilRepository.findByProfilUuid(idDeux));
                 connectRepository.save(connect);
                 return new ResponseEntity<>(authResponse, HttpStatus.ACCEPTED);
             }
@@ -67,7 +68,7 @@ public class ConnectService {
         AuthResponse authResponse = new AuthResponse();
 
         JwtUserDetails profil = (JwtUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Long profilId = profil.getId();
+        UUID profilId = profil.getId();
         authResponse.setDatas(connectRepository.findByIdUn_Id(profilId));
 
         return new ResponseEntity<>(authResponse,HttpStatus.OK);

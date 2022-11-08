@@ -12,11 +12,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 
 @Service
@@ -42,11 +42,11 @@ public class TransfertService {
         AuthResponse authResponse = new AuthResponse();
 
         JwtUserDetails profilRecup = (JwtUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Long profilId = profilRecup.getId();
+        UUID profilId = profilRecup.getId();
 
 
         Date date = new Date();
-        if (profilRepository.existsById(postTransfert.getIdCredit()) && profilRepository.existsById(profilId)) {
+        if (profilRepository.existsById(postTransfert.getIdCredit()) && profilRepository.existsByIdEquals(profilId)) {
             transfer.setDate(date);
             transfer.setDescription(postTransfert.getDescriptif());
             Profil profilDebtor = profilService.getProfilDebtor(profilId, postTransfert.getBalance());
@@ -74,7 +74,7 @@ public class TransfertService {
         List<TransfertDto> transfertDtoList = new ArrayList<>();
 
         JwtUserDetails profilRecup = (JwtUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Long profilId = profilRecup.getId();
+        UUID profilId = profilRecup.getId();
 
         List<Transfer> transfersList = transferRepository.findByIdDebtor_IdOrderByDateDesc(profilId);
 
@@ -98,7 +98,7 @@ public class TransfertService {
     public List<Transfer> getFirstTrasnfert(){
 
         JwtUserDetails profilRecup = (JwtUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Long profilId = profilRecup.getId();
+        UUID profilId = profilRecup.getId();
 
         return transferRepository.findFirstByIdDebtor_IdOrderByDateDesc(profilId);
     }

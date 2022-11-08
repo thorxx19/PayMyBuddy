@@ -25,10 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -73,7 +70,7 @@ public class AccountService {
     public ResponseEntity<AuthResponse> modifSolde(BigDecimal balance){
 
         JwtUserDetails profil = (JwtUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Long profilId = profil.getId();
+        UUID profilId = profil.getId();
         AuthResponse authResponse = new AuthResponse();
 
         Profil profilUpdate = profilRepository.findUniqueProfil(profilId);
@@ -95,13 +92,13 @@ public class AccountService {
     public List<Profil> getConnect(){
 
         JwtUserDetails profilRecup = (JwtUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Long profilId = profilRecup.getId();
+        UUID profilId = profilRecup.getId();
 
         List<Profil> profilList = profilRepository.findByIdNot(profilId);
         List<Connect> connectList = connectRepository.findByIdUn_Id(profilId);
         List<Profil> listUnique = new ArrayList<>();
-        List<Long> uniqueLongConnect = new ArrayList<>();
-        List<Long> uniqueLongProfil = new ArrayList<>();
+        List<UUID> uniqueLongConnect = new ArrayList<>();
+        List<UUID> uniqueLongProfil = new ArrayList<>();
 
         for (Connect connect: connectList) {
             uniqueLongConnect.add(connect.getIdDeux().getId());
@@ -109,7 +106,7 @@ public class AccountService {
         for (Profil profil: profilList) {
             uniqueLongProfil.add(profil.getId());
         }
-        for (Long longInt:uniqueLongProfil) {
+        for (UUID longInt:uniqueLongProfil) {
             if (!uniqueLongConnect.contains(longInt)){
                 listUnique.add(profilRepository.findUniqueProfil(longInt));
             }

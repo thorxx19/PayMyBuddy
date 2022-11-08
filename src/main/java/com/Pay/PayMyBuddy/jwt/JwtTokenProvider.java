@@ -8,6 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.UUID;
 
 @Component
 @Slf4j
@@ -24,7 +25,7 @@ public class JwtTokenProvider {
         JwtUserDetails userDetails = (JwtUserDetails) auth.getPrincipal();
         Date expireDate = new Date(new Date().getTime() + EXPIRES_IN);
 
-        return Jwts.builder().setSubject(Long.toString(userDetails.getId()))
+        return Jwts.builder().setSubject((userDetails.getId()).toString())
                 .setIssuedAt(new Date()).setExpiration(expireDate)
                 .signWith(SignatureAlgorithm.HS512, APP_SECRET).compact();
     }
@@ -36,10 +37,11 @@ public class JwtTokenProvider {
                 .signWith(SignatureAlgorithm.HS512, APP_SECRET).compact();
     }
 
-    Long getUserIdFromJwt(String token){
+    UUID getUserIdFromJwt(String token){
         Claims claims = Jwts.parser().setSigningKey(APP_SECRET).parseClaimsJws(token).getBody();
         log.info(claims.getSubject());
-        return Long.parseLong(claims.getSubject());
+
+        return UUID.fromString(claims.getSubject());
     }
     boolean validateToken(String token){
 

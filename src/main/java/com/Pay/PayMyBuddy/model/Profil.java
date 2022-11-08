@@ -3,6 +3,9 @@ package com.Pay.PayMyBuddy.model;
 
 import lombok.*;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
@@ -17,16 +20,18 @@ import java.util.*;
 public class Profil {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "client_id")
-    private Long id;
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Type(type = "uuid-char")
+    @Column(name = "client_id", updatable = false, nullable = false, columnDefinition = "VARCHAR(36)")
+    private UUID id;
     @NotEmpty
     private String name;
     @Column(name = "last_name")
     @NotEmpty
     private String lastName;
     @NotEmpty
-    @Pattern(regexp = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9- ]+\\.)+[a-zA-Z]{2,7}", message = "Mail non valide")
+    @Pattern(regexp = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9- ]+\\.)+[a-zA-Z]{2,7}$", message = "Mail non valide")
     private String mail;
     @NotEmpty
     @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$", message = "Password non valide")

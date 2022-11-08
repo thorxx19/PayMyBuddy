@@ -8,13 +8,14 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 
 @Repository
-public interface TransferRepository extends JpaRepository<Transfer, Long> {
+public interface TransferRepository extends JpaRepository<Transfer, UUID> {
 
-    List<Transfer> findFirstByIdDebtor_IdOrderByDateDesc(Long id);
+    List<Transfer> findFirstByIdDebtor_IdOrderByDateDesc(UUID id);
 
-    List<Transfer> findByIdDebtor_IdOrderByDateDesc(Long id);
+    List<Transfer> findByIdDebtor_IdOrderByDateDesc(UUID id);
 
 }

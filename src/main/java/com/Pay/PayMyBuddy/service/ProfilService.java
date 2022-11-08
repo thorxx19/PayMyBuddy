@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 
 @Service
@@ -34,8 +35,8 @@ public class ProfilService {
      * @return profil
      */
     @Transactional(readOnly = true)
-    public Profil getProfilDebtor(Long id, BigDecimal balance){
-        Profil profil = profilRepository.findByProfilId(id);
+    public Profil getProfilDebtor(UUID id, BigDecimal balance){
+        Profil profil = profilRepository.findByProfilUuid(id);
         BigDecimal solde = new BigDecimal(String.valueOf(profil.getAccountId().getBalance()));
         BigDecimal costs = balance.multiply(BigDecimal.valueOf(0.005));
         BigDecimal balanceCosts = balance.add(costs);
@@ -54,8 +55,8 @@ public class ProfilService {
      * @return profil
      */
     @Transactional(readOnly = true)
-    public Profil getProfilCredit(Long id, BigDecimal balance){
-        Profil profil = profilRepository.findByProfilId(id);
+    public Profil getProfilCredit(UUID id, BigDecimal balance){
+        Profil profil = profilRepository.findByProfilUuid(id);
         BigDecimal solde = new BigDecimal(String.valueOf(profil.getAccountId().getBalance())) ;
         profil.getAccountId().setBalance(solde.add(balance));
         profilRepository.save(profil);
@@ -68,9 +69,9 @@ public class ProfilService {
      * @return le profil ou null
      */
     @Transactional(readOnly = true)
-    public Profil getProfil(Long id){
-        if (profilRepository.existsById(id)) {
-            return profilRepository.findByProfilId(id);
+    public Profil getProfil(UUID id){
+        if (profilRepository.existsByIdEquals(id)) {
+            return profilRepository.findByProfilUuid(id);
         } else {
             return null;
         }
@@ -94,7 +95,7 @@ public class ProfilService {
         return profilRepository.findByMail(mail);
     }
     //todo javadoc
-    public ResponseEntity<AuthResponse> deleteClient(Long id){
+    public ResponseEntity<AuthResponse> deleteClient(UUID id){
 
         AuthResponse authResponse = new AuthResponse();
         profilRepository.deleteById(id);
@@ -104,17 +105,17 @@ public class ProfilService {
     public List<Profil> getClientById(){
 
         JwtUserDetails profilRecup = (JwtUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Long profilId = profilRecup.getId();
+        UUID profilId = profilRecup.getId();
 
         return profilRepository.findByIdList(profilId);
     }
     public List<Profil> getClient(){
         return profilRepository.findAll();
     }
-    public ResponseEntity<AuthResponse> getclientById(Long id){
+    public ResponseEntity<AuthResponse> getclientById(UUID id){
         AuthResponse authResponse = new AuthResponse();
         authResponse.setMessage("Profil idCredit");
-        authResponse.setData(profilRepository.findByProfilId(id));
+        authResponse.setData(profilRepository.findByProfilUuid(id));
         return new ResponseEntity<>(authResponse,HttpStatus.OK);
     }
 }

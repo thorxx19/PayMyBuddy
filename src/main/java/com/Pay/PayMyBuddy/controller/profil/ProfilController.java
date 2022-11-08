@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @Slf4j
@@ -51,12 +52,12 @@ public class ProfilController {
      * @throws ServiceException exception
      */
     @DeleteMapping("/client")
-    public ResponseEntity<AuthResponse> deleteClient(@RequestParam Long id) throws ServiceException {
+    public ResponseEntity<AuthResponse> deleteClient(@RequestParam UUID id) throws ServiceException {
        return profilService.deleteClient(id);
     }
 
     @GetMapping("/clientId")
-    public ResponseEntity<AuthResponse> getclientById(@RequestParam Long id){
+    public ResponseEntity<AuthResponse> getclientById(@RequestParam UUID id){
         return profilService.getclientById(id);
     }
 

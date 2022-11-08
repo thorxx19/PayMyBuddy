@@ -4,12 +4,13 @@ package com.Pay.PayMyBuddy.model;
 import lombok.Data;
 
 import java.util.List;
+import java.util.UUID;
 
 @Data
 public class AuthResponse {
 
     String message;
-    Long userId;
+    UUID userId;
     String accessToken;
     List<?> datas;
     Object data;

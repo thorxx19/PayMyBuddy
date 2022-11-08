@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 
 @Getter
@@ -18,13 +19,13 @@ import java.util.List;
 public class JwtUserDetails implements UserDetails {
 
 
-    private Long id;
+    private UUID id;
     private String username;
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
 
     //todo ajouter javadoc
-    private JwtUserDetails(Long id, String username, String password, Collection<? extends GrantedAuthority> authorities){
+    private JwtUserDetails(UUID id, String username, String password, Collection<? extends GrantedAuthority> authorities){
        this.id = id;
        this.username = username;
        this.password = password;
