@@ -16,14 +16,27 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     private ProfilRepository profilRepository;
-    //todo ajouter javadoc
+
+    /**
+     * Method pour ajouter le mail au token
+     *
+     * @param mail le mail du profil
+     * @return mail du profil
+     * @throws UsernameNotFoundException exception
+     */
     @Override
     public UserDetails loadUserByUsername(String mail) throws UsernameNotFoundException {
         Profil profil = profilRepository.findByMail(mail);
         return JwtUserDetails.create(profil);
     }
-    //todo ajouter javadoc
-    public UserDetails loadUserById(UUID id){
+
+    /**
+     * Method pour ajouter l'id au token
+     *
+     * @param id du profil
+     * @return l'id du profil
+     */
+    public UserDetails loadUserById(UUID id) {
         Profil profil = profilRepository.findById(id).get();
         return JwtUserDetails.create(profil);
     }

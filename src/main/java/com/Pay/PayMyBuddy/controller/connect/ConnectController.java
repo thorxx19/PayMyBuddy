@@ -27,6 +27,7 @@ public class ConnectController {
 
     /**
      * methode pour connecter 2 profil
+     *
      * @param connectDto un object avec l'id du débiteur et du créditeur
      * @return 202 ou 400
      */
@@ -37,6 +38,7 @@ public class ConnectController {
 
     /**
      * methode pour récup les connection pour un profil donné
+     *
      * @return une liste de profil connecter
      */
     @GetMapping("/connect")

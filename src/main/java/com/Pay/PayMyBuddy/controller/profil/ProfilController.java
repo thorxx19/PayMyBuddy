@@ -30,6 +30,7 @@ public class ProfilController {
 
     /**
      * methode pour récup tout les profil
+     *
      * @return une liste de profil
      */
     @GetMapping("/clients")
@@ -38,6 +39,7 @@ public class ProfilController {
     }
     /**
      * methode pour récup un profil avec sont id
+     *
      * @return un profil
      */
     @GetMapping("/client")
@@ -47,6 +49,7 @@ public class ProfilController {
 
     /**
      * methode pour delete un client
+     *
      * @param id l'id du client a dlete
      * @return 200
      * @throws ServiceException exception
@@ -56,6 +59,12 @@ public class ProfilController {
        return profilService.deleteClient(id);
     }
 
+    /**
+     * Method pour recup un client en fonction de sont id
+     *
+     * @param id l'id reçu du front
+     * @return les info du profil
+     */
     @GetMapping("/clientId")
     public ResponseEntity<AuthResponse> getclientById(@RequestParam UUID id){
         return profilService.getclientById(id);

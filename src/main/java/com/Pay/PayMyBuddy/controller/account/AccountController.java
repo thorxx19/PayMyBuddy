@@ -28,6 +28,7 @@ public class AccountController {
 
     /**
      * methode pour récupérer les profils pas connecter avec le profil.id
+     *
      * @return une liste de profil
      */
     @GetMapping("/mail")
@@ -37,6 +38,7 @@ public class AccountController {
 
     /**
      * methode pour modifier le solde d'un profil
+     *
      * @param accountRequest la balance et l'id du profil
      * @return 200 ou 403
      */

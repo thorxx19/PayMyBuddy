@@ -5,7 +5,6 @@ import com.Pay.PayMyBuddy.model.Account;
 import com.Pay.PayMyBuddy.model.AuthResponse;
 import com.Pay.PayMyBuddy.model.Connect;
 import com.Pay.PayMyBuddy.model.Profil;
-import com.Pay.PayMyBuddy.repository.AccountRepository;
 import com.Pay.PayMyBuddy.repository.ConnectRepository;
 import com.Pay.PayMyBuddy.repository.ProfilRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -13,19 +12,16 @@ import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.config.core.GrantedAuthorityDefaults;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.security.Principal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -40,6 +36,7 @@ public class AccountService {
 
     /**
      * methode pour creer un nouveau profil
+     *
      * @param profilAdd le profila add
      * @return 201
      * @throws ServiceException exception
@@ -64,6 +61,7 @@ public class AccountService {
 
     /**
      * methode pour modifier le solde d'un profil
+     *
      * @param balance l'argent a créditer ou débiter
      * @return 200 ou 403
      */
@@ -78,18 +76,23 @@ public class AccountService {
         BigDecimal solde = profilUpdate.getAccountId().getBalance();
         BigDecimal newSolde = solde.add(balance);
 
-        if (newSolde.intValue() >= 0){
+        if (newSolde.intValue() >= 0) {
             authResponse.setMessage("Modification sur votre compte effectif");
             profilUpdate.getAccountId().setBalance(newSolde);
             profilRepository.save(profilUpdate);
-            return new ResponseEntity<>(authResponse,HttpStatus.OK);
+            return new ResponseEntity<>(authResponse, HttpStatus.OK);
         } else {
             authResponse.setMessage("Modification sur votre compte impossible");
-            return new ResponseEntity<>(authResponse,HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(authResponse, HttpStatus.FORBIDDEN);
         }
     }
-    //todo ajouter javadoc
-    public List<Profil> getConnect(){
+
+    /**
+     * Methode qui gére la connection entre profil
+     *
+     * @return une list de profil non connecter
+     */
+    public List<Profil> getConnect() {
 
         JwtUserDetails profilRecup = (JwtUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UUID profilId = profilRecup.getId();
@@ -116,6 +119,7 @@ public class AccountService {
 
     /**
      * methode pour creer un compte bancaire au nouveau client
+     *
      * @return un compte bancaire
      */
     private Account addNewAccount(){

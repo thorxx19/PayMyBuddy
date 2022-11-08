@@ -26,8 +26,14 @@ public class AuthService {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
-    //todo ajouter javadoc
-    public ResponseEntity<AuthResponse> login(UserRequest loginRequest){
+
+    /**
+     * Methode pour gerer le login coter front
+     *
+     * @param loginRequest l'object reçu
+     * @return le token
+     */
+    public ResponseEntity<AuthResponse> login(UserRequest loginRequest) {
 
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(loginRequest.getMail(), loginRequest.getPassword());
         Authentication auth = authenticationManager.authenticate(authToken);
@@ -44,6 +50,7 @@ public class AuthService {
 
     /**
      * methode pour vérifier si un profil existe déja avec le même mail
+     *
      * @param profil le profil a controler
      * @return 201 ou 400
      */

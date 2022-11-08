@@ -28,6 +28,7 @@ public class TransfertController {
 
     /**
      * methode pour transferais de l'argent entre profil
+     *
      * @param postTransfert object
      * @return 200 ou 400
      */
@@ -38,6 +39,7 @@ public class TransfertController {
 
     /**
      * methode pour récup les transfert réaliser
+     *
      * @return une liste de transfert
      */
     @GetMapping("/transferts")
@@ -47,6 +49,7 @@ public class TransfertController {
 
     /**
      * methode pour récup le dernier transfert entre profil
+     *
      * @return un transfert
      */
     @GetMapping("/transfert")

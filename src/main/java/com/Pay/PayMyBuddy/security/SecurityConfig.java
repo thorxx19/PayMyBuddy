@@ -4,7 +4,6 @@ package com.Pay.PayMyBuddy.security;
 import com.Pay.PayMyBuddy.jwt.JwtAuthenticationEntryPoint;
 import com.Pay.PayMyBuddy.jwt.JwtAuthenticationFilter;
 import com.Pay.PayMyBuddy.service.UserDetailsServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,7 +21,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 
-//todo ajouter javadoc
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {

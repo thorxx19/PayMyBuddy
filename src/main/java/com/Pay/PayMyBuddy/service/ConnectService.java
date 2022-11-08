@@ -1,7 +1,6 @@
 package com.Pay.PayMyBuddy.service;
 
 
-
 import com.Pay.PayMyBuddy.jwt.JwtUserDetails;
 import com.Pay.PayMyBuddy.model.AuthResponse;
 import com.Pay.PayMyBuddy.model.Connect;
@@ -15,7 +14,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -31,6 +29,7 @@ public class ConnectService {
     /**
      * methode pour connecter 2 profil entre eux pour échanger de l'argent
      * profilid l'id du débiteur
+     *
      * @param idDeux l'ide du créditeur
      * @return 202 ou 400
      * @throws ServiceException exception
@@ -62,8 +61,13 @@ public class ConnectService {
             }
         }
     }
-    //todo ajouter javadoc
-    public ResponseEntity<AuthResponse> getConnectById(){
+
+    /**
+     * Method les connection pour un profil connecter
+     *
+     * @return une liste de connection
+     */
+    public ResponseEntity<AuthResponse> getConnectById() {
 
         AuthResponse authResponse = new AuthResponse();
 
@@ -71,7 +75,7 @@ public class ConnectService {
         UUID profilId = profil.getId();
         authResponse.setDatas(connectRepository.findByIdUn_Id(profilId));
 
-        return new ResponseEntity<>(authResponse,HttpStatus.OK);
+        return new ResponseEntity<>(authResponse, HttpStatus.OK);
     }
 
 }

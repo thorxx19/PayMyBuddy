@@ -30,6 +30,7 @@ public class ProfilService {
 
     /**
      * methode pour récup le profil du débiteur et faire la transaction
+     *
      * @param id du débiteur
      * @param balance l'argent a enlever a sont compte
      * @return profil
@@ -50,6 +51,7 @@ public class ProfilService {
 
     /**
      * methode pour récup le profil du débiteur
+     *
      * @param id du créditeur
      * @param balance l'argenet a créditer au profil
      * @return profil
@@ -65,6 +67,7 @@ public class ProfilService {
 
     /**
      * methode pour vérifier si un profil existe
+     *
      * @param id du profila vérifié
      * @return le profil ou null
      */
@@ -79,6 +82,7 @@ public class ProfilService {
 
     /**
      * methode récup un profil avec sont mail
+     *
      * @param mail mail du profil
      * @return le profil
      */
@@ -88,34 +92,60 @@ public class ProfilService {
 
     /**
      * methode récup un profil avec son nom
+     *
      * @param mail du profil
      * @return le profil
      */
-    public Profil getOneUserByUserName(String mail){
+    public Profil getOneUserByUserName(String mail) {
         return profilRepository.findByMail(mail);
     }
-    //todo javadoc
-    public ResponseEntity<AuthResponse> deleteClient(UUID id){
+
+    /**
+     * Method pour dlete un profil dans la BDD
+     *
+     * @param id l'id du profil a delete
+     * @return le status 200 si le profil et bien delete
+     */
+    public ResponseEntity<AuthResponse> deleteClient(UUID id) {
 
         AuthResponse authResponse = new AuthResponse();
         profilRepository.deleteById(id);
         authResponse.setMessage("Profil bien delete");
         return new ResponseEntity<>(authResponse, HttpStatus.OK);
     }
-    public List<Profil> getClientById(){
+
+    /**
+     * method pour récuperer les info du profil en fonction du token reçu
+     *
+     * @return le profil
+     */
+    public List<Profil> getClientById() {
 
         JwtUserDetails profilRecup = (JwtUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UUID profilId = profilRecup.getId();
 
         return profilRepository.findByIdList(profilId);
     }
-    public List<Profil> getClient(){
+
+    /**
+     * method pour récup tout les profil dans la BDD
+     *
+     * @return une liste de profils
+     */
+    public List<Profil> getClient() {
         return profilRepository.findAll();
     }
-    public ResponseEntity<AuthResponse> getclientById(UUID id){
+
+    /**
+     * Method pour récup un profil en fonction d'un id reçu
+     *
+     * @param id
+     * @return
+     */
+    public ResponseEntity<AuthResponse> getclientById(UUID id) {
         AuthResponse authResponse = new AuthResponse();
         authResponse.setMessage("Profil idCredit");
         authResponse.setData(profilRepository.findByProfilUuid(id));
-        return new ResponseEntity<>(authResponse,HttpStatus.OK);
+        return new ResponseEntity<>(authResponse, HttpStatus.OK);
     }
 }

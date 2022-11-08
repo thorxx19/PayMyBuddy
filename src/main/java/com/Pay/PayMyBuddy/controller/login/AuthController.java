@@ -37,6 +37,7 @@ public class AuthController {
 
     /**
      * methode pour connecter un profil avec ces identifient
+     *
      * @param loginRequest les login du profil
      * @return un token
      */
@@ -47,6 +48,7 @@ public class AuthController {
 
     /**
      * methode pour enregister un nouveau client
+     *
      * @param profil un object
      * @return 201 ou 400
      */
