@@ -10,6 +10,7 @@ public class UserRequest {
 
     @NotEmpty
     String password;
+
     @NotEmpty
     String mail;
 

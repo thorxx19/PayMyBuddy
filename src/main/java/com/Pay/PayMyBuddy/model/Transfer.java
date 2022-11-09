@@ -22,7 +22,9 @@ public class Transfer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_transfer")
     private Long id;
+
     private String description;
+
     @Column(name = "balance")
     private BigDecimal amount;
 

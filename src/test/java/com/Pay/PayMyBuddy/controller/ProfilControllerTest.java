@@ -25,6 +25,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.UUID;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -72,7 +74,7 @@ class ProfilControllerTest {
 
         ResponseEntity<AuthResponse> response = authController.login(user);
         String bearer = response.getBody().getAccessToken();
-        Long id = response.getBody().getUserId();
+        UUID id = response.getBody().getUserId();
 
         try {
             mockMvc.perform(get("/client").header(HttpHeaders.AUTHORIZATION,bearer)
@@ -114,7 +116,7 @@ class ProfilControllerTest {
         user.setPassword("test@O.fr");
 
         ResponseEntity<AuthResponse> response = authController.login(user);
-        Long id = response.getBody().getUserId();
+        UUID id = response.getBody().getUserId();
         String bearer = response.getBody().getAccessToken();
         try {
             mockMvc.perform(delete("/client").header(HttpHeaders.AUTHORIZATION,bearer)

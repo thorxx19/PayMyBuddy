@@ -23,6 +23,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.UUID;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -79,13 +81,13 @@ class ConnectControllerTest {
 
         ResponseEntity<AuthResponse> responseUn = authController.login(userUn);
         ResponseEntity<AuthResponse> responseDeux = authController.login(userDeux);
-        Long idUn = responseUn.getBody().getUserId();
+        UUID idUn = responseUn.getBody().getUserId();
         String bearer = responseUn.getBody().getAccessToken();
-        Long idDeux = responseDeux.getBody().getUserId();
+        UUID idDeux = responseDeux.getBody().getUserId();
 
         try {
             mockMvc.perform(post("/connect").contentType(MediaType.APPLICATION_JSON)
-                            .content("{\"idUn\" :" + idUn + ",\"idDeux\" : " + idDeux + " }")
+                            .content("{\"idUn\" :\" " + idUn + "\",\"idDeux\" :\" " + idDeux + "\" }")
                     .header(HttpHeaders.AUTHORIZATION,bearer)).andExpect(status().is2xxSuccessful());
         } catch (Exception e) {
             log.error("Error: ", e);
@@ -107,13 +109,13 @@ class ConnectControllerTest {
 
         ResponseEntity<AuthResponse> responseUn = authController.login(userUn);
         ResponseEntity<AuthResponse> responseDeux = authController.login(userDeux);
-        Long idUn = responseUn.getBody().getUserId();
+        UUID idUn = responseUn.getBody().getUserId();
         String bearer = responseUn.getBody().getAccessToken();
-        Long idDeux = responseDeux.getBody().getUserId();
+        UUID idDeux = responseDeux.getBody().getUserId();
 
         try {
             mockMvc.perform(post("/connect").contentType(MediaType.APPLICATION_JSON)
-                    .content("{\"idDeux\" : " + idDeux + " }")
+                    .content("{\"idDeux\" :\" " + idDeux + "\" }")
                     .header(HttpHeaders.AUTHORIZATION,bearer)).andExpect(status().is2xxSuccessful());
         } catch (Exception e) {
             log.error("Error: ", e);
@@ -122,7 +124,7 @@ class ConnectControllerTest {
 
         try {
             mockMvc.perform(post("/connect").contentType(MediaType.APPLICATION_JSON)
-                    .content("{\"idUn\" :" + idUn + ",\"idDeux\" : " + idDeux + " }")
+                    .content("{\"idUn\" :\" " + idUn + "\",\"idDeux\" : " + String.valueOf(idDeux) + " }")
                     .header(HttpHeaders.AUTHORIZATION,bearer)).andExpect(status().is4xxClientError());
         } catch (Exception e) {
             log.error("Error: ", e);
@@ -167,11 +169,11 @@ class ConnectControllerTest {
         ResponseEntity<AuthResponse> responseUn = authController.login(userUn);
         ResponseEntity<AuthResponse> responseDeux = authController.login(userDeux);
         String bearer = responseUn.getBody().getAccessToken();
-        Long idDeux = responseDeux.getBody().getUserId();
+        UUID idDeux = responseDeux.getBody().getUserId();
 
         try {
             mockMvc.perform(post("/connect").contentType(MediaType.APPLICATION_JSON)
-                    .content("{\"idDeux\" : " + idDeux + " }")
+                    .content("{\"idDeux\" :\" " + idDeux + "\" }")
                     .header(HttpHeaders.AUTHORIZATION,bearer)).andExpect(status().is2xxSuccessful());
         } catch (Exception e) {
             log.error("Error: ", e);
@@ -198,7 +200,7 @@ class ConnectControllerTest {
 
         ResponseEntity<AuthResponse> response = authController.login(user);
         String bearer = response.getBody().getAccessToken();
-        Long id = response.getBody().getUserId();
+        UUID id = response.getBody().getUserId();
 
         try {
             mockMvc.perform(get("/mail").header(HttpHeaders.AUTHORIZATION,bearer)
@@ -241,7 +243,7 @@ class ConnectControllerTest {
 
         ResponseEntity<AuthResponse> response = authController.login(user);
         String bearer = response.getBody().getAccessToken();
-        Long id = response.getBody().getUserId();
+        UUID id = response.getBody().getUserId();
 
         try {
             mockMvc.perform(put("/solde").header(HttpHeaders.AUTHORIZATION,bearer)

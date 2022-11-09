@@ -23,6 +23,7 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_account")
     private Long id;
+
     private BigDecimal balance;
 
     private Date date;

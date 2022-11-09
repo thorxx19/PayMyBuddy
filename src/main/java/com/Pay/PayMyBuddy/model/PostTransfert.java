@@ -2,6 +2,7 @@ package com.Pay.PayMyBuddy.model;
 
 
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotEmpty;
@@ -17,6 +18,7 @@ public class PostTransfert {
     @DecimalMin(value = "0.0", inclusive = false)
     private BigDecimal balance;
 
+    @Length(min = 5, max = 30)
     private String descriptif;
 
 

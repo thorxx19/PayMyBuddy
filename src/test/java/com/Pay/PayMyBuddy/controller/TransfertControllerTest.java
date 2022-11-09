@@ -27,6 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 
 @AutoConfigureMockMvc
@@ -83,7 +84,7 @@ public class TransfertControllerTest {
 
         ResponseEntity<AuthResponse> responseUn = authController.login(userUn);
         ResponseEntity<AuthResponse> responseDeux = authController.login(userDeux);
-        Long idDeux = responseDeux.getBody().getUserId();
+        UUID idDeux = responseDeux.getBody().getUserId();
         String bearerUn = responseUn.getBody().getAccessToken();
         String bearer = responseUn.getBody().getAccessToken();
 
@@ -102,7 +103,7 @@ public class TransfertControllerTest {
         try {
             mockMvc.perform(post("/transfert").header(HttpHeaders.AUTHORIZATION,bearerUn)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content("{\"idCredit\" : " + idDeux + ",\"balance\" : 5,\"descriptif\" : \"test\"}"))
+                    .content("{\"idCredit\" :\" " + idDeux + "\",\"balance\" : 5,\"descriptif\" : \"test\"}"))
                     .andExpect(content().contentType("application/json"))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.message").value("Transfert réussie"));
@@ -133,7 +134,7 @@ public class TransfertControllerTest {
         try {
             mockMvc.perform(post("/transfert").header(HttpHeaders.AUTHORIZATION,bearerUn)
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content("{\"idDebtor\" : 1000000,\"idCredit\" :1000001,\"balance\" : 5,\"descriptif\" : \"test\"}"))
+                            .content("{\"idCredit\" :\"00000000-0000-0000-0000-000000000000\",\"balance\" : 5,\"descriptif\" : \"test\"}"))
                     .andExpect(content().contentType("application/json"))
                     .andExpect(status().is4xxClientError());
         } catch (Exception e) {
@@ -155,14 +156,13 @@ public class TransfertControllerTest {
 
         ResponseEntity<AuthResponse> responseUn = authController.login(userUn);
         ResponseEntity<AuthResponse> responseDeux = authController.login(userDeux);
-        Long idUn = responseUn.getBody().getUserId();
-        Long idDeux = responseDeux.getBody().getUserId();
+        UUID idDeux = responseDeux.getBody().getUserId();
         String bearerUn = responseUn.getBody().getAccessToken();
 
         try {
             mockMvc.perform(post("/transfert").header(HttpHeaders.AUTHORIZATION,bearerUn)
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content("{\"idCredit\" : " + idDeux + ",\"balance\" : 5,\"descriptif\" : \"test\"}"))
+                            .content("{\"idCredit\" :\" " + idDeux + "\",\"balance\" : 5,\"descriptif\" : \"test\"}"))
                     .andExpect(content().contentType("application/json"))
                     .andExpect(status().is4xxClientError())
                     .andExpect(jsonPath("$.message").value("Transfert pas réussie"));
@@ -183,7 +183,7 @@ public class TransfertControllerTest {
 
         ResponseEntity<AuthResponse> responseUn = authController.login(userUn);
         ResponseEntity<AuthResponse> responseDeux = authController.login(userDeux);
-        Long idDeux = responseDeux.getBody().getUserId();
+        UUID idDeux = responseDeux.getBody().getUserId();
         String bearerUn = responseUn.getBody().getAccessToken();
         String bearerDeux = responseUn.getBody().getAccessToken();
 
@@ -210,7 +210,7 @@ public class TransfertControllerTest {
         try {
             mockMvc.perform(post("/transfert").header(HttpHeaders.AUTHORIZATION,bearerUn)
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content("{\"idCredit\" : " + idDeux + ",\"balance\" : 5,\"descriptif\" : \"Un repas\"}"))
+                            .content("{\"idCredit\" :\" " + idDeux + "\",\"balance\" : 5,\"descriptif\" : \"Un repas\"}"))
                     .andExpect(content().contentType("application/json"))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.message").value("Transfert réussie"));
@@ -220,7 +220,7 @@ public class TransfertControllerTest {
         try {
             mockMvc.perform(post("/transfert").header(HttpHeaders.AUTHORIZATION,bearerUn)
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content("{\"idCredit\" : " + idDeux + ",\"balance\" : 10,\"descriptif\" : \"Un jeux\"}"))
+                            .content("{\"idCredit\" :\" " + idDeux + "\",\"balance\" : 10,\"descriptif\" : \"Un jeux\"}"))
                     .andExpect(content().contentType("application/json"))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.message").value("Transfert réussie"));
@@ -253,8 +253,7 @@ public class TransfertControllerTest {
 
         ResponseEntity<AuthResponse> responseUn = authController.login(userUn);
         ResponseEntity<AuthResponse> responseDeux = authController.login(userDeux);
-        Long idUn = responseUn.getBody().getUserId();
-        Long idDeux = responseDeux.getBody().getUserId();
+        UUID idDeux = responseDeux.getBody().getUserId();
         String bearerUn = responseUn.getBody().getAccessToken();
         String bearerDeux = responseDeux.getBody().getAccessToken();
 
@@ -280,7 +279,7 @@ public class TransfertControllerTest {
         try {
             mockMvc.perform(post("/transfert").header(HttpHeaders.AUTHORIZATION,bearerUn)
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content("{\"idCredit\" : " + idDeux + ",\"balance\" : 5,\"descriptif\" : \"Un repas\"}"))
+                            .content("{\"idCredit\" :\" " + idDeux + "\",\"balance\" : 5,\"descriptif\" : \"Un repas\"}"))
                     .andExpect(content().contentType("application/json"))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.message").value("Transfert réussie"));
@@ -290,7 +289,7 @@ public class TransfertControllerTest {
         try {
             mockMvc.perform(post("/transfert").header(HttpHeaders.AUTHORIZATION,bearerUn)
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content("{\"idCredit\" : " + idDeux + ",\"balance\" : 10,\"descriptif\" : \"Un jeux\"}"))
+                            .content("{\"idCredit\" :\" " + idDeux + "\",\"balance\" : 10,\"descriptif\" : \"Un jeux\"}"))
                     .andExpect(content().contentType("application/json"))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.message").value("Transfert réussie"));
