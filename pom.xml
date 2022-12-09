@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.Pay</groupId>
-	<artifactId>PayMyBuddy</artifactId>
+	<artifactId>paymybuddy</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>PayMyBuddy</name>
 	<description>une appli qui permettrait aux clients de transférer de l'argent</description>
@@ -355,7 +355,7 @@
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<configuration>
 					<excludes>
-						<exclude>**/model/*</exclude>
+						<exclude>**/model/**</exclude>
 						<exclude>**/data/*</exclude>
 						<exclude>**/configuration/*</exclude>
 						<exclude>**/filter/*</exclude>

@@ -6,7 +6,7 @@ spring:
     username: "root"
     password: "rootroot"
   jpa:
-    show-sql: true
+    show-sql: false
     hibernate:
       ddl-auto: none
     properties:
@@ -37,8 +37,7 @@ logging:
         web: ERROR
     com:
       Pay:
-        PayMyBuddy:
-          repository: ERROR
+        paymybuddy:
           filter: INFO
           service: INFO
           controller: INFO
@@ -79,9 +78,14 @@ logging:
         StartupInfoLogger: ERROR
     com:
       Pay:
-        PayMyBuddy:
-          service: DEBUG
+        paymybuddy:
           filter: INFO
+          service: INFO
+          controller: INFO
+          PayMyBuddyApplication: ERROR
+  pattern:
+    console: "%red(%d{dd/MM/yyyy}) %highlight(%-5level) [%blue(%t)] %yellow(%C{1.}): %msg%n%throwable"
+    file: "%n%d{dd/MM/yyyy HH:MM:ss} %p %C{1.}%n %m%n"
 ---
 
 management.endpoints.web.exposure.include: "*"
